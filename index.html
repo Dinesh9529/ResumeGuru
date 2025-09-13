@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Resume Guru – Premium Resume Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      font-size: 26px;
+      color: #2d3436;
+    }
+    .card {
+      background: #fff;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 600;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #dfe6e9;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .row {
+      display: flex;
+      gap: 16px;
+    }
+    .row > div {
+      flex: 1;
+    }
+    button {
+      background: linear-gradient(to right, #6c5ce7, #a29bfe);
+      color: #fff;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .success {
+      background: #dff9fb;
+      color: #0984e3;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Resume Guru – Premium Resume Builder</h1>
+  <div class="card">
+    <form id="resumeForm">
+      <label>पूरा नाम</label>
+      <input name="name" required />
+
+      <label>WhatsApp नंबर</label>
+      <input name="phone" required placeholder="10-digit या country code के साथ" />
+
+      <label>ईमेल</label>
+      <input type="email" name="email" required />
+
+      <label>आप क्या हैं?</label>
+      <select name="status" id="status">
+        <option value="Fresher">Fresher</option>
+        <option value="Experienced">Experienced</option>
+      </select>
+
+      <div class="row">
+        <div>
+          <label>शिक्षा</label>
+          <input name="education" required />
+        </div>
+        <div>
+          <label>पासिंग ईयर</label>
+          <input name="passingYear" required />
+        </div>
+      </div>
+
+      <div id="expBlock" class="hidden">
+        <label>कुल अनुभव</label>
+        <input name="totalExp" placeholder="e.g., 2 years 6 months" />
+        <label>कंपनी का नाम</label>
+        <input name="company" />
+        <label>जॉब टाइटल</label>
+        <input name="title" />
+        <label>काम की अवधि</label>
+        <input name="duration" placeholder="Jan 2022 – Aug 2024" />
+        <label>मुख्य जिम्मेदारियाँ</label>
+        <textarea name="responsibilities" rows="4" placeholder="- Built X&#10;- Improved Y&#10;- Achieved Z"></textarea>
+      </div>
+
+      <label>स्किल्स</label>
+      <input name="skills" placeholder="MS Excel, Tally, Communication" />
+
+      <label>भाषाएँ</label>
+      <input name="languages" placeholder="Hindi, English" />
+
+      <label>Career Objective (optional)</label>
+      <textarea name="objective" rows="3"></textarea>
+
+      <label>पासपोर्ट साइज फोटो अपलोड करें</label>
+      <input type="file" name="photo" accept="image/*" />
+
+      <button type="submit">Resume Generate करें</button>
+      <div id="result" class="success hidden"></div>
+    </form>
+  </div>
+
+  <script>
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyAnqdda7OgAqwuiYOB0DiCAsBCGDEwCeJq8MDGmNZe6su0NvziwLXoC8mcgwu9Hm_pgQ/exec';
+
+    const statusEl = document.getElementById('status');
+    const expBlock = document.getElementById('expBlock');
+    function toggleExp() {
+      expBlock.classList.toggle('hidden', statusEl.value !== 'Experienced');
+    }
+    statusEl.addEventListener('change', toggleExp);
+    toggleExp();
+
+    document.getElementById('resumeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+
+      // Hide experience fields if Fresher
+      if (formData.get('status') !== 'Experienced') {
+        formData.set('totalExp', '');
+        formData.set('company', '');
+        formData.set('title', '');
+        formData.set('duration', '');
+        formData.set('responsibilities', '');
+      }
+
+      const btn = form.querySelector('button');
+      const out = document.getElementById('result');
+      btn.disabled = true;
+      btn.textContent = 'Generating...';
+      out.classList.add('hidden');
+
+      try {
+        const res = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          body: formData
+        });
+        const json = await res.json();
+        if (!json.ok) throw new Error(json.error || 'Failed');
+
+        out.innerHTML = `
+          ✅ Resume तैयार है:<br/>
+          <a href="${json.pdfUrl}" target="_blank">📄 PDF डाउनलोड करें</a><br/>
+          <a href="${json.whatsappLink}" target="_blank">📲 WhatsApp पर भेजें</a>
+        `;
+        out.classList.remove('hidden');
+        btn.textContent = 'Generate Again';
+      } catch (err) {
+        alert('Error: ' + err.message);
+        btn.textContent = 'Try Again';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
