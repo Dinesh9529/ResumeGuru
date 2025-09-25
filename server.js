@@ -236,8 +236,44 @@ if (!process.env.OPENROUTER_API_KEY) {
     console.warn("?? WARNING: OPENROUTER_API_KEY is not set. The API will not work.");
 }
 
+// 👇 इस route को app.listen से ऊपर डालो
+app.post("/create-order", async (req, res) => {
+  const { amount } = req.body;
+
+  try {
+    const response = await axios.post(
+      "https://api.cashfree.com/pg/orders",   // Production URL
+      {
+        order_amount: amount,
+        order_currency: "INR",
+        order_id: "order_" + Date.now(),
+        customer_details: {
+          customer_id: "cust_" + Date.now(),
+          customer_email: "test@example.com",
+          customer_phone: "9999999999"
+        }
+      },
+      {
+        // 👇 यही आपका headers block है
+        headers: {
+          "x-client-id": process.env.CASHFREE_APP_ID,
+          "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+          "x-api-version": "2022-09-01",
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    res.json({ payment_session_id: response.data.payment_session_id });
+  } catch (err) {
+    console.error("Cashfree error:", err.response?.data || err.message);
+    res.status(500).json({ error: "Order creation failed" });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`? Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
