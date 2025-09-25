@@ -1349,11 +1349,11 @@ document.addEventListener('click', e=>{
 
   // Payment trigger
   async function payResumeReview() {
-    const res = await fetch("/create-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: 49 })
-    });
+    const res = await fetch("https://resumeguru.onrender.com/create-order", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ amount: 49 })
+});
     const data = await res.json();
 
     if (data.payment_session_id) {
@@ -1962,4 +1962,5 @@ Sincerely,
 </div>
 
 </body>
+
 </html>
