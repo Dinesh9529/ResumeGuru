@@ -1,3 +1,4 @@
+require("dotenv").config();
 import express from "express";
 import cors from "cors";
 import fetch from "node-fetch";
@@ -275,5 +276,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`? Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
