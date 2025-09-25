@@ -1,7 +1,7 @@
 {
   "name": "resumeguru-backend",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "server.cjs",
   "scripts": {
     "start": "node server.js"
   },
