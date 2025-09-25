@@ -1,9 +1,10 @@
 require("dotenv").config();
-import express from "express";
-import cors from "cors";
-import fetch from "node-fetch";
+const express = require("express");
+const axios = require("axios");
+const cors = require("cors");
 
 const app = express();
+app.use(express.json());
 app.use(cors());
 // Increased limit to handle larger resumes if needed
 app.use(express.json({ limit: "5mb" }));
@@ -276,6 +277,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`? Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
 
