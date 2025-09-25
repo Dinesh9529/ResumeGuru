@@ -226,6 +226,10 @@ app.get("/api/health", (req, res) => {
 });
 
 // --- SERVER START ---
+app.post("/cashfree-webhook", (req, res) => {
+  console.log("Cashfree webhook payload:", req.body);
+  res.sendStatus(200);
+});
 
 // Check for API key on startup for fail-fast behavior
 if (!process.env.OPENROUTER_API_KEY) {
@@ -236,3 +240,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`? Ultra Resume Guru API is running on port ${PORT}`);
 });
+
