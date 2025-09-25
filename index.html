@@ -1,477 +1,1965 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ResumeGuru Ultra Max</title>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <title>ResumeGuru Ultra — English, Offline</title>
 
-  <!-- Google APIs -->
-  <script src="https://apis.google.com/js/api.js"></script>
+  
 
-  <!-- pdfmake -->
+  <!-- Web fonts (UI rendering) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- PDF engine + QR -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.min.js"></script>
-
-  <!-- QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://sdk.cashfree.com/js/ui/2.0.0/cashfree.sandbox.js"></script>
 
   <style>
-    :root{--c:#6c5ce7}
-    *{box-sizing:border-box}
-    body{font-family:'Poppins',sans-serif;background:#f6f8fb;color:#2d3436;margin:0}
-    .wrap{max-width:1100px;margin:24px auto;padding:16px}
-    h1{margin:0 0 8px;font-size:28px}
-    .card{background:#fff;border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.08);padding:18px}
-    .pills{display:flex;gap:8px;flex-wrap:wrap}
-    .pill{background:#eef1ff;color:#3b3fe0;border-radius:999px;padding:6px 10px;font-size:12px}
-    .theme{display:flex;gap:8px}
-    .sw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 2px #e6e6e6}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .two{display:grid;grid-template-columns:340px 1fr;gap:18px}
-    label{display:block;font-weight:600;margin-top:10px}
-    input,select,textarea{width:100%;padding:10px;border:1px solid #e3e7ee;border-radius:10px;background:#fbfcfe}
-    textarea{min-height:80px}
-    .hint{font-size:12px;color:#6c757d}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .btn{background:linear-gradient(90deg,var(--c),#a29bfe);border:0;color:#fff;padding:11px 16px;border-radius:10px;cursor:pointer;font-weight:600}
-    .btn.ghost{background:#eef1ff;color:#3b3fe0}
-    .status{margin-left:auto;color:#3b3fe0;font-size:13px}
-    .badge{padding:4px 8px;border-radius:8px;background:#f1f5ff;color:#2948ff;font-size:12px}
-    hr{border:none;border-top:1px solid #efeff3;margin:14px 0}
-    small.muted{color:#7f8c8d}
-    .hidden{display:none}
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --card: #273c5c;
+      --text: #f1f5f9;
+      --accent: #38bdf8;
+      --highlight: #1e40af;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+  
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: var(--text);
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+  
+    .container {
+      max-width: 960px;
+      margin: auto;
+      padding: 20px;
+    }
+  
+    h1, h2, h3 {
+      color: var(--highlight);
+      margin-bottom: 12px;
+    }
+  
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+  
+    .btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 6px 4px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      color: #0f172a;
+      background: var(--accent);
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease;
+    }
+  
+    .btn:hover {
+      transform: scale(1.05);
+    }
+  
+    .btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+  
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--success);
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+  
+    .info-box {
+      background: var(--panel);
+      border-left: 5px solid var(--accent);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+  
+    .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+  
+    .danger {
+      color: var(--danger);
+      font-weight: bold;
+    }
+  
+    .footer {
+      text-align: center;
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 40px;
+    }
   </style>
+
+
+<style>
+  :root {
+    --c: #2962ff; /* primary color */
+    --bg: #f7f9fc;
+    --text: #2d3436;
+    --accent: #3b3fe0;
+    --btn-grad: linear-gradient(90deg, var(--c), #8ab4ff);
+  }
+
+  * { box-sizing: border-box }
+  body {
+    font-family: 'Poppins','Noto Sans Devanagari',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    transition: background 0.3s ease;
+  }
+
+  .wrap { max-width: 1150px; margin: 24px auto; padding: 16px }
+  h1 { margin: 0 0 8px; font-size: 28px }
+  .sub { color: #58606b; margin: 0 0 16px; font-weight: 600 }
+
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    padding: 18px;
+  }
+
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center }
+  .right { margin-left: auto }
+
+  .pill {
+    background: #eef1ff;
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .btn {
+    background: var(--btn-grad);
+    border: 0;
+    color: #fff;
+    padding: 11px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .btn.ghost {
+    background: #eef1ff;
+    color: var(--accent);
+  }
+
+  .btn.warn {
+    background: #ffe9e9;
+    color: #b00020;
+  }
+
+  .status { margin-left: auto; color: var(--accent); font-size: 13px }
+
+  .theme { display: flex; gap: 8px; margin: 12px 0 }
+  .sw {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e6e6e6;
+  }
+
+  .two {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 18px;
+  }
+
+  @media (max-width:980px) {
+    .two { grid-template-columns: 1fr }
+  }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px }
+
+  label { display: block; font-weight: 600; margin-top: 10px }
+  input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e3e7ee;
+    border-radius: 10px;
+    background: #fbfcfe;
+  }
+
+  textarea { min-height: 84px }
+  hr { border: none; border-top: 1px solid #efeff3; margin: 14px 0 }
+  .hint { color: #7f8c8d; font-size: 12px; margin-top: 4px }
+
+  .authbar { display: flex; gap: 8px }
+
+  .modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    place-items: center;
+    background: rgba(0,0,0,.35);
+    z-index: 50;
+  }
+
+  .modal .box {
+    background: #fff;
+    border-radius: 14px;
+    min-width: 320px;
+    max-width: 92vw;
+    padding: 16px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.2);
+  }
+
+  .closex {
+    margin-left: auto;
+    background: #f2f4ff;
+    border: 0;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .badgelite {
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: #f1f5ff;
+    color: #2948ff;
+    font-size: 12px;
+  }
+
+  input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+  border: 2px solid #2dd4bf; /* Teal border */
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 0 4px rgba(45, 212, 191, 0.3); /* subtle glow */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #0ea5e9; /* Sky blue on focus */
+  box-shadow: 0 0 6px rgba(14, 165, 233, 0.5);
+}
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: #0f172a; /* Dark slate */
+}
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f8fafc;
+    padding: 20px;
+  }
+
+  form {
+    max-width: 600px;
+    margin: auto;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.08);
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: 2px solid #2dd4bf;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    box-shadow: 0 0 4px rgba(45, 212, 191, 0.3);
+    outline: none;
+    transition: 0.3s ease;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: #0ea5e9;
+    box-shadow: 0 0 6px rgba(14, 165, 233, 0.5);
+  }
+
+  button {
+    background: linear-gradient(135deg, #0ea5e9, #2dd4bf);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  <style>
+  .header {
+    background: linear-gradient(135deg, #0ea5e9, #2dd4bf); /* Sky to Teal */
+    color: white;
+    padding: 24px;
+    text-align: center;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .header p {
+    margin-top: 8px;
+    font-size: 16px;
+    opacity: 0.9;
+  }
+
+  .header-buttons {
+    margin-top: 16px;
+  }
+
+  .header-buttons button {
+    background: white;
+    color: #0ea5e9;
+    border: none;
+    padding: 10px 18px;
+    margin: 0 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+
+  .header-buttons button:hover {
+    background: #f0f9ff;
+    box-shadow: 0 0 6px rgba(14,165,233,0.3);
+  }
+
+  <style>
+  /* Romantic pastel background */
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #fdf6f9, #f0f9ff, #fefce8);
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    color: #1e293b;
+    transition: background 0.6s ease;
+  }
+
+  /* Header with soft glow */
+  .wrap h1 {
+    text-align: center;
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 800;
+    color: #ec4899;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+    margin-bottom: 8px;
+  }
+
+  .wrap .sub {
+    text-align: center;
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 24px;
+  }
+
+  /* Full-width form card */
+  .card {
+    width: 100vw;
+    margin: 0 calc(50% - 50vw);
+    background: rgba(255,255,255,0.9);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    padding: 24px;
+    backdrop-filter: blur(6px);
+  }
+
+  /* Form fields with floating labels */
+  .fld {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .fld input, .fld textarea {
+    width: 100%;
+    padding: 14px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .fld input:focus, .fld textarea:focus {
+    border-color: #ec4899;
+    box-shadow: 0 0 0 4px rgba(236,72,153,0.2);
+    outline: none;
+  }
+
+  .fld .lbl {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: #fff;
+    padding: 0 6px;
+    font-size: 13px;
+    color: #ec4899;
+    font-weight: 600;
+  }
+
+  /* Buttons with romantic glow */
+  .btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  }
+
+  .btn.primary {
+    background: #ec4899;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(236,72,153,0.3);
+  }
+
+  .btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(236,72,153,0.4);
+  }
+
+  /* Mobile polish */
+  @media (max-width: 720px) {
+    .card {
+      padding: 18px;
+      border-radius: 12px;
+    }
+    .fld input, .fld textarea {
+      font-size: 14px;
+    }
+  }
+</style>
+<style>
+  .wrap {
+    position: relative;
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 40px 0;
+    box-sizing: border-box;
+    background: linear-gradient(90deg,
+      #ff6b6b, #f59e0b, #fbbf24, #22c55e, #06b6d4, #3b82f6, #8b5cf6, #ec4899, #ff6b6b);
+    background-size: 300% 100%;
+    animation: rainbowPatta 20s linear infinite;
+    text-align: center;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  @keyframes rainbowPatta {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .wrap h1 {
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 800;
+    margin-bottom: 12px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .wrap .sub {
+    font-size: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+  }
+</style>
+<style>
+  /* Base font upgrade */
+  body {
+    font-family: 'Segoe UI', Roboto, Inter, sans-serif;
+    font-size: 16px;
+    color: #1e293b;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Header font — bold and glowing */
+  .wrap h1 {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 0 6px rgba(255,255,255,0.2);
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  /* Subtext — soft but readable */
+  .wrap .sub {
+    font-size: 17px;
+    color: #fefefe;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.7;
+    font-weight: 500;
+  }
+
+  /* Form labels (if using .lbl or .fld) */
+  .lbl {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0ea5e9;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  /* Input fields */
+  input, textarea, select {
+    font-size: 15px;
+    font-weight: 500;
+    color: #0f172a;
+    background: #fff;
+    border: 1px solid rgba(15,23,42,0.1);
+    border-radius: 10px;
+    padding: 10px 12px;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 4px rgba(56,189,248,0.2);
+    outline: none;
+  }
+
+  /* Button text */
+  .btn {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+</style>
+
+<style>
+  /* Form field wrapper */
+  .fld {
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  /* Labels */
+  .lbl {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0ea5e9;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  /* Inputs and Textareas — always dark border */
+  input, textarea, select {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #0f172a;
+    background: #fff;
+    border: 2px solid #334155; /* dark slate border */
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  /* Optional: subtle glow on focus */
+  input:focus, textarea:focus, select:focus {
+    box-shadow: 0 0 0 4px rgba(14,165,233,0.15);
+    outline: none;
+  }
+</style>
+
+
+
+
+</style>
+<div class="theme">
+  <div class="sw" style="background:#2962ff" onclick="switchTheme('blue')"></div>
+  <div class="sw" style="background:#00e5ff" onclick="switchTheme('cyan')"></div>
+  <div class="sw" style="background:#ff6b6b" onclick="switchTheme('coral')"></div>
+  <div class="sw" style="background:#5ee7df" onclick="switchTheme('mint')"></div>
+</div>
 </head>
 <body>
 <div class="wrap">
-  <h1>ResumeGuru Ultra Max</h1>
+  <h1>ResumeGuru Ultra — Unlimited Safe (नौकरी पाने के लिए  सबसे जरुरी) </h1>
+  <p class="sub">अब आप English में Premium Resume and Ats Basic Resume बना सकते हैं — Same form, Same PDF language.(शुरू करने से पहले — महत्वपूर्ण निर्देश वेबसाइट के अंत में देखे)</p>
+
   <div class="card">
     <div class="row" style="justify-content:space-between">
-      <div class="pills">
+      <div class="row">
         <span class="pill">Premium + ATS-safe</span>
-        <span class="pill">Dual Language (Hi/En)</span>
-        <span class="pill">Drive Link + WhatsApp</span>
-        <span class="pill">Sheets Logging</span>
+        <span class="pill">English</span>
+        <span class="pill">Multi-page PDF</span>
+        <span class="pill">Photo + QR + Timeline</span>
       </div>
-      <div class="theme">
-        <div class="sw" style="background:#6c5ce7" data-color="#6c5ce7"></div>
-        <div class="sw" style="background:#2962ff" data-color="#2962ff"></div>
-        <div class="sw" style="background:#00b894" data-color="#00b894"></div>
-        <div class="sw" style="background:#b00020" data-color="#b00020"></div>
+      <div class="row right">
+        <div class="authbar">
+          <span id="authState" class="badgelite">Guest</span>
+          <button class="btn ghost" id="btnLogin">Login</button>
+          <button class="btn ghost" id="btnSignup">Sign up</button>
+          <button class="btn warn" id="btnLogout" style="display:none">Logout</button>
+        </div>
       </div>
     </div>
 
-    <div class="grid3" style="margin-top:10px">
-      <div><span class="badge">Google: <span id="gStat">Signed out</span></span></div>
-      <div><span class="badge">Premium: <span id="pStat">Free</span></span></div>
-      <div><span class="badge">Drive: <span id="dStat">Off</span></span></div>
+    <div class="row" style="margin-top:10px;justify-content:space-between">
+      <div class="theme">
+        <div class="sw" style="background:#2962ff" data-color="#2962ff" title="Blue"></div>
+        <div class="sw" style="background:#6c5ce7" data-color="#6c5ce7" title="Purple"></div>
+        <div class="sw" style="background:#00b894" data-color="#00b894" title="Teal"></div>
+        <div class="sw" style="background:#b00020" data-color="#b00020" title="Maroon"></div>
+      </div>
+      <span id="statusText" class="status">Idle</span>
     </div>
 
     <hr/>
 
+    <!-- Form -->
     <div class="two">
       <div>
-        <label>पूरा नाम</label>
-        <input id="name" placeholder="आपका नाम" required />
+        <label>Full name</label>
+        <input id="name" placeholder="Your full name" />
 
-        <label>रोल / हेडलाइन</label>
-        <input id="headline" placeholder="जैसे: Software Engineer" />
+        <label>Role / Headline</label>
+        <input id="headline" placeholder="e.g., Full-Stack Developer" />
 
-        <label>ईमेल</label>
-        <input id="email" placeholder="you@example.com" />
+        <label>Contact email</label>
+        <input id="email" placeholder="name@example.com" />
 
-        <label>मोबाइल</label>
-        <input id="phone" placeholder="9876543210" />
+        <label>Mobile</label>
+        <input id="phone" placeholder="10-digit or with country code" />
 
-        <label>स्थान</label>
-        <input id="location" placeholder="Jaipur, Rajasthan" />
+        <label>Location</label>
+        <input id="location" placeholder="City, State" />
 
-        <label>LinkedIn प्रोफाइल</label>
-        <input id="linkedin" placeholder="https://linkedin.com/in/username" />
+        <label>Date of birth</label>
+        <input id="dob" type="date" />
 
-        <label>WhatsApp नंबर (QR/शेयर के लिए)</label>
-        <input id="wa" placeholder="9876543210" />
+        <label>LinkedIn</label>
+        <input id="linkedin" placeholder="https://linkedin.com/in/..." />
 
-        <label>QR में क्या लिंक करें</label>
+        <label>Portfolio (optional)</label>
+        <input id="website" placeholder="https://..." />
+
+        <label>WhatsApp number (for quick connect)</label>
+        <input id="wa" placeholder="10-digit or with country code" />
+
+        <label>QR should link to</label>
         <select id="qrTarget">
           <option value="linkedin">LinkedIn</option>
           <option value="website">Portfolio</option>
           <option value="whatsapp">WhatsApp</option>
         </select>
 
-        <label>पसंदीदा भाषा</label>
+        <label>Preferred language</label>
         <select id="lang">
-          <option value="hi">हिंदी</option>
           <option value="en">English</option>
-          <option value="both">Both (2 pages)</option>
+          </select>
+
+        <label>Theme color</label>
+        <select id="themePreset">
+          <option value="#2962ff">Blue</option>
+          <option value="#6c5ce7">Purple</option>
+          <option value="#00b894">Teal</option>
+          <option value="#b00020">Maroon</option>
         </select>
 
-        <label>पासपोर्ट फोटो</label>
+        <label>Passport photo</label>
         <input type="file" id="photo" accept="image/*" />
-        <div class="hint">Square crop auto होगा</div>
+        <div class="hint">Square crop happens automatically on PDF</div>
       </div>
 
       <div>
-        <label>Career Objective / Summary</label>
-        <textarea id="objective" placeholder="Short, crisp, value-focused summary..."></textarea>
+        <label>Impact summary (2–3 lines)</label>
+        <textarea id="objective" placeholder=""></textarea>
 
         <div class="grid2">
           <div>
             <label>Status</label>
             <select id="status">
-              <option>Fresher</option>
               <option>Experienced</option>
+              <option>Fresher</option>
             </select>
           </div>
           <div>
-            <label>Theme color</label>
-            <select id="themePreset">
-              <option value="#6c5ce7">Purple</option>
-              <option value="#2962ff">Blue</option>
-              <option value="#00b894">Teal</option>
-              <option value="#b00020">Maroon</option>
-            </select>
+            <label>Resume creation date</label>
+            <input id="resDate" type="date" />
           </div>
         </div>
 
         <div class="grid2">
           <div>
-            <label>Education (हर लाइन एक entry)</label>
-            <textarea id="education" placeholder="MA, Univ, 2009&#10;BSc, College, 2007"></textarea>
+            <label>Education (one per line)</label>
+            <textarea id="education" placeholder=""></textarea>
           </div>
           <div>
-            <label>Certifications (हर लाइन एक)</label>
-            <textarea id="certs" placeholder="Google Cloud&#10;AWS CCP"></textarea>
+            <label>Certifications (one per line)</label>
+            <textarea id="certs" placeholder=""></textarea>
           </div>
         </div>
 
-        <label>Experience Timeline (Company | Title | Duration | Highlights ; ;)</label>
-        <textarea id="exp" placeholder="Acme | Senior Dev | 2022–Present | Built X; Improved Y&#10;TechSoft | Dev | 2020–2022 | Led A; Automated B"></textarea>
+        <label>Experience timeline (Company | Title | Duration | Highlights ; ;)</label>
+        <textarea id="exp" placeholder=""></textarea>
 
-        <label>Projects (Project | Stack | Impact ; ;)</label>
-        <textarea id="projects" placeholder="ResumeGuru | JS, Sheets | 1k users; viral launch"></textarea>
+        <label>Projects (Project | Stack/Scope | Impact ; ;)</label>
+        <textarea id="projects" placeholder=""></textarea>
 
         <div class="grid2">
           <div>
             <label>Skills (Skill : 0-100)</label>
-            <textarea id="skills" placeholder="JavaScript : 90&#10;Node.js : 80&#10;UI/UX : 70"></textarea>
+            <textarea id="skills" placeholder=""></textarea>
           </div>
           <div>
-            <label>Achievements (हर लाइन एक)</label>
-            <textarea id="awards" placeholder="Hackathon Winner 2023"></textarea>
+            <label>Achievements (one per line)</label>
+            <textarea id="awards" placeholder=""></textarea>
           </div>
         </div>
 
         <div class="grid2">
           <div>
-            <label>Languages (हर लाइन एक)</label>
-            <textarea id="languages" placeholder="Hindi&#10;English"></textarea>
+            <label>Languages (one per line)</label>
+            <textarea id="languages" placeholder=""></textarea>
           </div>
           <div>
-            <label>Interests (हर लाइन एक)</label>
-            <textarea id="hobbies" placeholder="Open-source&#10;Cricket"></textarea>
+            <label>Interests (one per line)</label>
+            <textarea id="hobbies" placeholder=""></textarea>
           </div>
         </div>
+
+        <label>What makes me different (one per line)</label>
+        <textarea id="unique" placeholder=""></textarea>
+
+        <label>Signature name</label>
+        <input id="signature" placeholder="Your name or initials" />
       </div>
     </div>
 
     <hr/>
 
     <div class="row">
-      <button id="btnSignIn" class="btn ghost">Google Sign-in</button>
-      <button id="btnGeneratePremium" class="btn">Generate Premium PDF</button>
+      <button id="btnGeneratePremium" class="btn" onclick="payNow()">Generate Premium PDF</button>
       <button id="btnGenerateATS" class="btn ghost">Generate ATS-safe PDF</button>
       <button id="btnDownload" class="btn" disabled>Download</button>
       <button id="btnShareWA" class="btn" disabled>WhatsApp</button>
-      <span class="status" id="statusText">Idle</span>
     </div>
-
-    <div class="row" style="margin-top:8px">
-      <small class="muted">Drive upload + WhatsApp link चाहिए? Toggle on.</small>
-      <label class="row" style="align-items:center;margin:0 0 0 10px">
-        <input type="checkbox" id="toggleDrive" />&nbsp;Drive Upload On
-      </label>
-    </div>
-
     <div id="qrTemp" style="width:0;height:0;overflow:hidden"></div>
   </div>
 </div>
+ <div id="toast" class="toast">Ready — Download your resume</div>
+<!-- Auth Modals -->
+<div id="modalLogin" class="modal">
+  <div class="box">
+    <div class="row"><strong>Login</strong><button class="closex" data-close="modalLogin">Close</button></div><hr/>
+    <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com"/>
+    <label>Password</label><input id="loginPass" type="password" placeholder="******"/>
+    <div class="row" style="margin-top:12px"><button class="btn" id="doLogin">Login</button><button class="btn ghost" id="openReset">Reset password</button></div>
+  </div>
+</div>
+
+<div id="modalSignup" class="modal">
+  <div class="box">
+    <div class="row"><strong>Sign up</strong><button class="closex" data-close="modalSignup">Close</button></div><hr/>
+    <label>Name</label><input id="suName" placeholder="Your name"/>
+    <label>Email</label><input id="suEmail" type="email" placeholder="name@example.com"/>
+    <label>Password</label><input id="suPass" type="password" placeholder="Min 6 chars"/>
+    <div class="row" style="margin-top:12px"><button class="btn" id="doSignup">Create account</button></div>
+  </div>
+</div>
+
+<div id="modalReset" class="modal">
+  <div class="box">
+    <div class="row"><strong>Reset password</strong><button class="closex" data-close="modalReset">Close</button></div><hr/>
+    <label>Email</label><input id="rpEmail" type="email" placeholder="Registered email"/>
+    <label>New password</label><input id="rpPass" type="password" placeholder="Min 6 chars"/>
+    <div class="row" style="margin-top:12px"><button class="btn" id="doReset">Update password</button></div>
+  </div>
+</div>
+
 <script>
-  const CLIENT_ID = "951120146413-l09vnkvd18f76htlgba8khc7mfj9qst7.apps.googleusercontent.com";
-  const SHEET_ID = "19G24G3xVVCy4efOjtI3g8-7qyo5F17Lrl6k_7Up7Hoo";
-  const DRIVE_FOLDER_ID = "1IKNI57sGxWCVVc0s5p47AlQRxAUBx29w";
-  
-  const $ = (id)=>document.getElementById(id);
-  const st = (t)=>$("statusText").textContent=t;
-  let THEME = "#6c5ce7", gapiInited=false, signedEmail=null;
-  let currentBlob=null, currentName=null, lastDriveLink=null;
-  
+// Helpers
+const $ = id => document.getElementById(id);
+const st = t => $("statusText").textContent = t;
+let THEME = "#2962ff";
+let currentBlob = null, currentName = null;
+
+// Theme controls
+document.documentElement.style.setProperty('--c', THEME);
+$("themePreset").addEventListener("change", e=>{
+  THEME = e.target.value;
   document.documentElement.style.setProperty('--c', THEME);
-  $("themePreset").addEventListener("change", e=>{
-    THEME = e.target.value;
+});
+document.querySelectorAll('.sw').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    THEME = el.dataset.color;
     document.documentElement.style.setProperty('--c', THEME);
+    $("themePreset").value = THEME;
   });
-  document.querySelectorAll('.sw').forEach(el=>{
-    el.addEventListener('click',()=>{ THEME = el.dataset.color; document.documentElement.style.setProperty('--c', THEME); $("themePreset").value = THEME; });
+});
+
+// Phone utils
+function toIntlPhone(raw){ const d=(raw||"").replace(/\D/g,""); return d.length===10? "91"+d : d; }
+
+// Text parsing
+function lines(id){ return ($(id).value||"").split("\n").map(s=>s.trim()).filter(Boolean); }
+function parseKVLines(id){ return lines(id).map(l=>{ const i=l.indexOf(":"); return i<0? {k:l,v:""}:{k:l.slice(0,i).trim(), v:l.slice(i+1).trim()}; }); }
+function parseTimeline(arr){ return arr.map(l=>{ const p=l.split("|").map(x=>x.trim()); const hi=(p[3]||"").split(";").map(x=>x.trim()).filter(Boolean); return {a:p[0]||"", b:p[1]||"", c:p[2]||"", hi}; }); }
+
+// Image helpers
+async function readImageDataURL(file){
+  if(!file) return null;
+  const fr = new FileReader();
+  return await new Promise((res,rej)=>{ fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(file); });
+}
+async function squareCrop(dataUrl, size=520){
+  if(!dataUrl) return null;
+  const img = await new Promise(res=>{ const im=new Image(); im.onload=()=>res(im); im.src=dataUrl; });
+  const s=Math.min(img.width,img.height), sx=(img.width-s)/2, sy=(img.height-s)/2;
+  const c=document.createElement('canvas'); c.width=size; c.height=size;
+  const ctx=c.getContext('2d'); ctx.fillStyle="#fff"; ctx.fillRect(0,0,size,size);
+  ctx.drawImage(img,sx,sy,s,s,0,0,size,size);
+  return c.toDataURL('image/png');
+}
+async function makeQR(data){
+  if(!data) return null;
+  return new Promise(resolve=>{
+    const wrap=document.createElement('div'); $("qrTemp").appendChild(wrap);
+    new QRCode(wrap,{text:data,width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
+    setTimeout(()=>{
+      const img=wrap.querySelector('img'); const src=img?img.src:null;
+      wrap.remove(); resolve(src);
+    },300);
   });
-  
-  function toIntlPhone(raw){ const d=(raw||"").replace(/\D/g,""); return d.length===10? "91"+d : d; }
-  function lines(id){ return ($(id).value||"").split("\n").map(s=>s.trim()).filter(Boolean); }
-  function parseKVLines(id){ return lines(id).map(l=>{ const i=l.indexOf(":"); return i<0? {k:l,v:""}:{k:l.slice(0,i).trim(), v:l.slice(i+1).trim()}; }); }
-  function parseTimeline(linesArr){ return linesArr.map(l=>{ const p=l.split("|").map(x=>x.trim()); const hi=(p[3]||"").split(";").map(x=>x.trim()).filter(Boolean); return {a:p[0]||"", b:p[1]||"", c:p[2]||"", hi}; }); }
-  
-  async function readImageDataURL(file){
-    if(!file) return null;
-    const fr = new FileReader();
-    return await new Promise((res,rej)=>{ fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(file); });
-  }
-  async function squareCrop(dataUrl, size=500){
-    if(!dataUrl) return null;
-    const img = await new Promise(res=>{ const im=new Image(); im.onload=()=>res(im); im.src=dataUrl; });
-    const s=Math.min(img.width,img.height), sx=(img.width-s)/2, sy=(img.height-s)/2;
-    const c=document.createElement('canvas'); c.width=size; c.height=size;
-    const ctx=c.getContext('2d'); ctx.fillStyle="#fff"; ctx.fillRect(0,0,size,size);
-    ctx.drawImage(img,sx,sy,s,s,0,0,size,size);
-    return c.toDataURL('image/png');
-  }
-  async function makeQR(data){
-    if(!data) return null;
-    return new Promise(resolve=>{
-      const wrap=document.createElement('div'); $("qrTemp").appendChild(wrap);
-      new QRCode(wrap,{text:data,width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
-      setTimeout(()=>{
-        const img=wrap.querySelector('img'); const src=img?img.src:null;
-        wrap.remove(); resolve(src);
-      },400);
+}
+
+// Visual components for pdfMake
+function skillBar(name, level, theme){
+  const L=Math.max(0,Math.min(100, parseInt((level||"").replace('%','')||"0",10)));
+  return {
+    margin:[0,2,0,6],
+    stack:[
+      { text:name, bold:true, fontSize:10 },
+      { canvas:[
+        { type:'rect', x:0, y:0, w:210, h:6, r:3, color:'#ececec' },
+        { type:'rect', x:0, y:0, w:2.1*L, h:6, r:3, color: theme }
+      ]}
+    ]
+  };
+}
+function timelineItem(company,title,duration,points,theme){
+  return {
+    columns:[
+      { width:12, canvas:[{ type:'circle', x:6,y:6,r:4,color:theme }] },
+      { width:'*', stack:[
+        { text:`${company} — ${title}`, bold:true },
+        { text: duration, color:'#636e72', margin:[0,0,0,4] },
+        { ul: (points&&points.length? points : ['—']), margin:[0,0,0,8] }
+      ]}
+    ],
+    columnGap:8
+  };
+}
+
+// Premium document
+function makePremiumDoc(data, photo, qrImg, theme, lang){
+  const t = (hi,en)=> (lang==='hi'? hi : en);
+  const sidebar=[], main=[];
+
+  if(photo) sidebar.push({ image:photo, fit:[180,180], alignment:'center', margin:[0,0,0,12] });
+
+  const contact = [
+    data.email, data.phone, data.location,
+    data.dob ? t(`जन्मतिथि: ${data.dob}`, `Date of birth: ${data.dob}`) : null
+  ].filter(Boolean).map(x=>({text:x, margin:[0,2,0,0]}));
+  if(contact.length){ sidebar.push({ text:t("संपर्क","Contact"), style:"sec" }); sidebar.push(...contact); }
+
+  const links=[];
+  if(data.linkedin) links.push({ text:`LinkedIn`, link:data.linkedin, color:theme });
+  if(data.website) links.push({ text:`Portfolio`, link:data.website, color:theme });
+  if(links.length){ sidebar.push({ text:t("लिंक्स","Links"), style:"sec" }); sidebar.push(...links); }
+
+  if(data.skills.length){ sidebar.push({ text:t("कौशल","Skills"), style:"sec" }); data.skills.forEach(s=> sidebar.push(skillBar(s.k, s.v, theme))); }
+  if(data.languages.length){ sidebar.push({ text:t("भाषाएँ","Languages"), style:"sec" }); sidebar.push({ ul:data.languages }); }
+  if(data.hobbies.length){ sidebar.push({ text:t("रुचियाँ","Interests"), style:"sec" }); sidebar.push({ ul:data.hobbies }); }
+  if(data.unique.length){ sidebar.push({ text:t("मेरी विशेषताएँ","What makes me different"), style:"sec" }); sidebar.push({ ul: data.unique }); }
+  if(qrImg){ sidebar.push({ text:t("क्विक कनेक्ट","Quick Connect"), style:"sec" }); sidebar.push({ image:qrImg, fit:[140,140], margin:[0,4,0,0] }); }
+
+  main.push({
+    columns:[
+      { width:'*', stack:[
+        { text: data.name || '', style:'name' },
+        { text: data.headline || '', color:'#636e72', margin:[0,2,0,0] }
+      ]},
+      { width:6, canvas:[{ type:'rect', x:0,y:0,w:6,h:35,color:theme }] }
+    ],
+    columnGap:12, margin:[0,0,0,8]
+  });
+
+  if(data.objective){ main.push({ text:t("इम्पैक्ट सारांश","Impact summary"), style:"sec" }); main.push({ text:data.objective, margin:[0,0,0,10] }); }
+
+  if(data.education.length){
+    main.push({ text:t("शिक्षा","Education"), style:"sec" });
+    const body = data.education.map(e=>{
+      const parts=e.split(',').map(x=>x.trim());
+      const left=parts.slice(0,parts.length-1).join(', ');
+      const right=parts[parts.length-1]||'';
+      return [{ text:left||e, margin:[0,3,0,3] }, { text:right, color:'#636e72' }];
+    });
+    main.push({
+      table:{ widths:['*','auto'], body },
+      layout:{
+        hLineColor:i=> i? '#f0f0f0':'#ffffff',
+        vLineColor:()=> '#ffffff',
+        paddingLeft:()=>4,paddingRight:()=>4,paddingTop:()=>4,paddingBottom:()=>4
+      },
+      margin:[0,0,0,8]
     });
   }
-  
-  function scopes(){
-    const base = ["https://www.googleapis.com/auth/spreadsheets","https://www.googleapis.com/auth/userinfo.email"];
-    if ($("toggleDrive").checked) base.push("https://www.googleapis.com/auth/drive.file");
-    return base.join(" ");
+
+  if(data.exp.length){
+    main.push({ text:t("अनुभव","Experience timeline"), style:"sec" });
+    data.exp.forEach(x=> main.push(timelineItem(x.a,x.b,x.c,x.hi,theme)));
   }
-  async function initGapi(){
-    if(gapiInited) return;
-    await new Promise(res=>gapi.load("client:auth2",res));
-    await gapi.client.init({
-      clientId: CLIENT_ID,
-      scope: scopes(),
-      discoveryDocs:[
-        "https://sheets.googleapis.com/$discovery/rest?version=v4",
-        ...($("toggleDrive").checked? ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"] : [])
-      ]
+
+  if(data.projects.length){
+    main.push({ text:t("प्रोजेक्ट्स","Key projects"), style:"sec" });
+    data.projects.forEach(x=>{
+      main.push({
+        stack:[
+          { text:`${x.a} — ${x.b}`, bold:true },
+          { text:x.c, color:'#636e72', margin:[0,0,0,2] },
+          { ul: (x.hi && x.hi.length? x.hi : ['—']) }
+        ],
+        margin:[0,0,0,6]
+      });
     });
-    gapiInited=true;
   }
-  async function ensureSignedIn(){
-    await initGapi();
-    const auth=gapi.auth2.getAuthInstance();
-    if(!auth.isSignedIn.get()) await auth.signIn();
-    const prof=auth.currentUser.get().getBasicProfile();
-    signedEmail=prof && prof.getEmail? prof.getEmail() : null;
-    $("gStat").textContent = signedEmail ? ("Signed: "+signedEmail) : "Signed";
-  }
-  
-  async function logToSheet(row){
-    const params={ spreadsheetId:SHEET_ID, range:"Sheet1!A:Q", valueInputOption:"USER_ENTERED" };
-    const values=[[
-      row.Timestamp,row.Name,row.Email,row.Phone,row.Location,row.Status,
-      row.Summary,row.Links,row.Education,row.Experience,row.Projects,
-      row.Skills,row.Certs,row.Awards,row.Languages,row.Hobbies,row.DriveLink
-    ]];
-    await gapi.client.sheets.spreadsheets.values.append(params,{values});
-  }
-  
-  async function uploadToDrive(fileName, blob){
-    if(!$("toggleDrive").checked) return null;
-    $("dStat").textContent = "Uploading…";
-    const token = gapi.auth.getToken().access_token;
-    const meta = { name:fileName, mimeType:"application/pdf", parents: DRIVE_FOLDER_ID? [DRIVE_FOLDER_ID] : [] };
-    const form = new FormData();
-    form.append("metadata", new Blob([JSON.stringify(meta)], {type:"application/json"}));
-    form.append("file", blob);
-    const up = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink,webContentLink",{
-      method:"POST", headers:{ "Authorization":"Bearer "+token }, body:form
+
+  if(data.certs.length){ main.push({ text:t("प्रमाणपत्र","Certifications"), style:"sec" }); main.push({ ul:data.certs }); }
+  if(data.awards.length){ main.push({ text:t("उपलब्धियाँ","Achievements"), style:"sec" }); main.push({ ul:data.awards }); }
+
+  // Final row: Date + Signature
+  const finalDate = data.resDate || new Date().toLocaleDateString('en-IN');
+  const signText = data.signature || data.name || '__________';
+  main.push({
+    columns: [
+      { width: '50%', text: t(`तिथि: ${finalDate}`, `Date: ${finalDate}`), margin:[0,20,0,0] },
+      { width: '50%', text: t(`हस्ताक्षर: ${signText}`, `Signature: ${signText}`), alignment: 'right', margin:[0,20,0,0] }
+    ]
+  });
+
+  return {
+    pageSize:'A4',
+    pageMargins:[28,28,28,28],
+    content:[
+      { canvas:[{ type:'rect', x:0,y:0,w:540,h:4,color:theme }], margin:[0,0,0,10] },
+      { columns:[ { width:210, stack:sidebar }, { width:'*', stack:main } ], columnGap:18 }
+    ],
+    styles:{ name:{ fontSize:22, bold:true, color:'#2d3436' }, sec:{ fontSize:13, bold:true } },
+    defaultStyle:{ fontSize:10, lineHeight:1.28 }
+  };
+}
+
+// ATS-safe document
+function makeATSdoc(data){
+  const body = [];
+  if(data.name || data.headline) body.push({ text: [data.name||'', data.headline? ' | '+data.headline : ''].join(''), bold:true, fontSize:14 });
+  const contact = [
+    data.email, data.phone, data.location,
+    data.dob ? `Date of birth: ${data.dob}` : null,
+    data.linkedin, data.website
+  ].filter(Boolean).join(" | ");
+  if(contact) body.push({ text: contact, margin:[0,2,0,8] });
+
+  if(data.objective){ body.push({ text:"Impact summary", bold:true, margin:[0,8,0,4] }); body.push({ text: data.objective }); }
+  if(data.education.length){ body.push({ text:"Education", bold:true, margin:[0,8,0,4] }); data.education.forEach(e=> body.push({ text: "• "+e })); }
+  if(data.exp.length){
+    body.push({ text:"Experience timeline", bold:true, margin:[0,8,0,4] });
+    data.exp.forEach(x=>{
+      body.push({ text: `• ${[x.a,x.b,x.c].filter(Boolean).join(' | ')}` });
+      (x.hi||[]).forEach(h=> body.push({ text: `   - ${h}` }));
     });
-    if(!up.ok) throw new Error("Drive upload failed");
-    const js = await up.json();
-    await fetch(`https://www.googleapis.com/drive/v3/files/${js.id}/permissions`,{
-      method:"POST", headers:{ "Authorization":"Bearer "+token, "Content-Type":"application/json" },
-      body: JSON.stringify({ role:"reader", type:"anyone" })
+  }
+  if(data.projects.length){
+    body.push({ text:"Key projects", bold:true, margin:[0,8,0,4] });
+    data.projects.forEach(x=>{
+      body.push({ text: `• ${[x.a,x.b,x.c].filter(Boolean).join(' | ')}` });
+      (x.hi||[]).forEach(h=> body.push({ text:`   - ${h}` }));
     });
-    $("dStat").textContent = "Link ready";
-    return js.webViewLink || js.webContentLink || null;
+  }
+  if(data.skills.length){ body.push({ text:"Skills", bold:true, margin:[0,8,0,4] }); body.push({ text: data.skills.map(s=> s.k+(s.v?` (${s.v}%)`:"")).join(", ") }); }
+  if(data.certs.length){ body.push({ text:"Certifications", bold:true, margin:[0,8,0,4] }); data.certs.forEach(c=> body.push({ text:"• "+c })); }
+  if(data.awards.length){ body.push({ text:"Achievements", bold:true, margin:[0,8,0,4] }); data.awards.forEach(a=> body.push({ text:"• "+a })); }
+  if(data.languages.length){ body.push({ text:"Languages", bold:true, margin:[0,8,0,4] }); body.push({ text: data.languages.join(", ") }); }
+  if(data.hobbies.length){ body.push({ text:"Interests", bold:true, margin:[0,8,0,4] }); body.push({ text: data.hobbies.join(", ") }); }
+  if(data.unique.length){ body.push({ text:"What makes me different", bold:true, margin:[0,8,0,4] }); data.unique.forEach(u=> body.push({ text:"• "+u })); }
+
+  const finalDate = data.resDate || new Date().toLocaleDateString('en-IN');
+  const signText = data.signature || data.name || '__________';
+  body.push({
+    columns:[
+      { width:'50%', text:`Date: ${finalDate}`, margin:[0,16,0,0] },
+      { width:'50%', text:`Signature: ${signText}`, alignment:'right', margin:[0,16,0,0] }
+    ]
+  });
+
+  return {
+    pageSize:'A4',
+    pageMargins:[36,36,36,36],
+    background: function(currentPage, pageSize){
+      return { canvas: [ { type:'rect', x:10, y:10, w:pageSize.width-20, h:pageSize.height-20, r:6, lineWidth:1, lineColor:'#cfcfcf' } ] };
+    },
+    content: body,
+    defaultStyle:{ fontSize:10, lineHeight:1.3 }
+  };
+}
+
+// Collect form data
+async function collectAll(){
+  const data = {
+    name: $("name").value.trim(),
+    headline: $("headline").value.trim(),
+    email: $("email").value.trim(),
+    phone: $("phone").value.trim(),
+    location: $("location").value.trim(),
+    dob: $("dob").value,
+    linkedin: $("linkedin").value.trim(),
+    website: $("website").value.trim(),
+    wa: $("wa").value.trim(),
+    qrTarget: $("qrTarget").value,
+    lang: $("lang").value,
+    theme: THEME,
+    objective: $("objective").value.trim(),
+    status: $("status").value,
+    education: lines("education"),
+    certs: lines("certs"),
+    exp: parseTimeline(lines("exp")),
+    projects: parseTimeline(lines("projects")),
+    skills: parseKVLines("skills"),
+    awards: lines("awards"),
+    languages: lines("languages"),
+    hobbies: lines("hobbies"),
+    unique: lines("unique"),
+    resDate: $("resDate").value,
+    signature: $("signature").value.trim()
+  };
+
+  const rawPhoto = await readImageDataURL($("photo").files[0]);
+  const photo = await squareCrop(rawPhoto, 400);
+
+  let qrData="";
+  if(data.qrTarget==='linkedin') qrData=data.linkedin;
+  else if(data.qrTarget==='website') qrData=data.website;
+  else if(data.qrTarget==='whatsapp'){
+    const msg = `Hi ${data.name||''}, I viewed your resume. Let's connect!`;
+    const phone = toIntlPhone(data.wa||data.phone);
+    if (phone) qrData = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  }
+  const qrImg = qrData? await makeQR(qrData) : null;
+
+  return { data, photo, qrImg };
+}
+
+// Generate PDF
+async function generatePDF(kind){ // 'premium' | 'ats'
+
+try{
+    st("Preparing…");
+    const { data, photo, qrImg } = await collectAll();
+    data.kind = kind; // optional if you want to track ATS vs Premium
+    sendToAdmin(data);
+
+
+    let dd;
+    if(kind==='ats'){
+      dd = makeATSdoc(data);
+    } else {
+      const langs = data.lang==='both' ? ['en','hi'] : [data.lang];
+      const pages = [];
+      langs.forEach(l=>{
+        const doc = makePremiumDoc(data, photo, qrImg, THEME, l);
+        pages.push(...(doc.content||[]));
+        pages.push({ text:"", pageBreak:"after" });
+      });
+      if (pages.length && pages[pages.length-1].pageBreak) pages.pop();
+      dd = {
+        pageSize:'A4',
+        pageMargins:[28,28,28,28],
+        background: function(currentPage, pageSize){
+          return { canvas: [ { type:'rect', x:10, y:10, w:pageSize.width-20, h:pageSize.height-20, r:6, lineWidth:1, lineColor:'#cfcfcf' } ] };
+        },
+        content: pages,
+        styles:{ name:{ fontSize:22, bold:true, color:'#2d3436' }, sec:{ fontSize:13, bold:true } },
+        defaultStyle:{ fontSize:10, lineHeight:1.28 }
+      };
+    }
+
+    st("Rendering PDF…");
+    const safeName = (data.name||'User').replace(/\s+/g,'_');
+    currentName = `${kind==='ats' ? 'ATS' : 'Premium'}_${safeName}_${new Date().toISOString().slice(0,10)}.pdf`;
+    currentBlob = await new Promise((res,rej)=> pdfMake.createPdf(dd).getBlob(b=>b?res(b):rej(new Error("PDF failed"))) );
+
+    $("btnDownload").disabled=false;
+    $("btnShareWA").disabled=false;
+    st("Ready ✅ — Download and share");
+  }catch(e){
+    console.error(e);
+    alert(e.message||"Error");
+    st("Error");
+  }
+}
+
+// Buttons
+$("btnGeneratePremium").addEventListener("click", ()=>generatePDF('premium'));
+$("btnGenerateATS").addEventListener("click", ()=>generatePDF('ats'));
+$("btnDownload").addEventListener("click", ()=>{
+  if(!currentBlob) return alert("Generate PDF first");
+  const url=URL.createObjectURL(currentBlob);
+  const a=document.createElement('a');
+  a.href=url; a.download=currentName||"Resume.pdf"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),700);
+});
+$("btnShareWA").addEventListener("click", ()=>{
+  if(!currentBlob) return alert("Generate PDF first");
+  const name = $("name").value.trim() || "User";
+  const phone = toIntlPhone(($("wa").value||$("phone").value||"").trim());
+  if(!phone){ alert("Add WhatsApp number / phone"); return; }
+  const msg = `Namaste ${name}, your resume is ready. Please attach the PDF in WhatsApp (manual attach).`;
+  const link = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  window.open(link, "_blank");
+});
+
+// Auth (localStorage)
+const USERS_KEY = "RG_USERS";
+const CURR_KEY  = "RG_CURR";
+function getUsers(){ try{ return JSON.parse(localStorage.getItem(USERS_KEY)||"{}"); }catch{ return {}; } }
+function setUsers(u){ localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
+function setCurrent(email){ localStorage.setItem(CURR_KEY, email||""); updateAuthUI(); }
+function getCurrent(){ return localStorage.getItem(CURR_KEY)||""; }
+function updateAuthUI(){
+  const email = getCurrent();
+  $("authState").textContent = email? `Logged in: ${email}` : "Guest";
+  $("btnLogout").style.display = email? "inline-block":"none";
+  $("btnLogin").style.display  = email? "none":"inline-block";
+  $("btnSignup").style.display = email? "none":"inline-block";
+}
+updateAuthUI();
+
+$("btnLogin").onclick = ()=> showModal("modalLogin");
+$("btnSignup").onclick = ()=> showModal("modalSignup");
+$("btnLogout").onclick = ()=> { setCurrent(""); alert("Logged out"); };
+
+$("openReset").onclick = ()=> { hideModal("modalLogin"); showModal("modalReset"); };
+document.querySelectorAll(".closex").forEach(b=> b.onclick = ()=> hideModal(b.dataset.close) );
+
+function showModal(id){ $(id).style.display="grid"; }
+function hideModal(id){ $(id).style.display="none"; }
+
+$("doSignup").onclick = ()=>{
+  const name = $("suName").value.trim();
+  const email= $("suEmail").value.trim().toLowerCase();
+  const pass = $("suPass").value;
+  if(!name || !email || pass.length<6){ alert("Fill name, valid email, and min 6-char password"); return; }
+  const users = getUsers();
+  if(users[email]){ alert("Email already exists"); return; }
+  users[email] = { name, pass };
+  setUsers(users);
+  setCurrent(email);
+  hideModal("modalSignup");
+  alert("Account created");
+};
+$("doLogin").onclick = ()=>{
+  const email= $("loginEmail").value.trim().toLowerCase();
+  const pass = $("loginPass").value;
+  const users = getUsers();
+  if(!users[email] || users[email].pass!==pass){ alert("Invalid email or password"); return; }
+  setCurrent(email);
+  hideModal("modalLogin");
+  alert("Logged in");
+};
+$("doReset").onclick = ()=>{
+  const email= $("rpEmail").value.trim().toLowerCase();
+  const pass = $("rpPass").value;
+  if(pass.length<6){ alert("Min 6-char password"); return; }
+  const users = getUsers();
+  if(!users[email]){ alert("No account found for this email"); return; }
+  users[email].pass = pass;
+  setUsers(users);
+  hideModal("modalReset");
+  alert("Password updated");
+};
+</script>
+ 
+<script>
+// 🎨 Theme switcher logic
+const themes = {
+  purple: { '--primary': '#7c4dff', '--accent': '#00e5ff' },
+  cyan:   { '--primary': '#00e5ff', '--accent': '#2dd4bf' },
+  coral:  { '--primary': '#ff6b6b', '--accent': '#ffd166' },
+  mint:   { '--primary': '#5ee7df', '--accent': '#b490ca' }
+};
+
+document.querySelectorAll('.swatch').forEach((el, i) => {
+  el.addEventListener('click', () => {
+    const keys = Object.keys(themes);
+    const t = themes[keys[i]];
+    for (const k in t) document.documentElement.style.setProperty(k, t[k]);
+    showToast(`थीम बदली गई: ${keys[i]}`);
+  });
+});
+
+// 💸 Referral logic
+
+// 🔔 Toast alert
+function showToast(msg){
+  const t=document.getElementById('toast'); if(!t) return;
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(window.__t); window.__t=setTimeout(()=>t.classList.remove('show'), 1600);
+}
+
+// 💥 Ripple effect
+document.addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const r=document.createElement('span');
+  const d=Math.max(b.clientWidth,b.clientHeight);
+  const rect=b.getBoundingClientRect();
+  const x=e.clientX-rect.left, y=e.clientY-rect.top;
+  r.style.cssText=`position:absolute; width:${d}px; height:${d}px; left:${x-d/2}px; top:${y-d/2}px; background:rgba(255,255,255,.35); border-radius:50%; transform:scale(0); pointer-events:none; transition:transform .35s ease, opacity .5s ease;`;
+  b.appendChild(r); requestAnimationFrame(()=>{ r.style.transform='scale(1)'; r.style.opacity='0'; });
+  setTimeout(()=>r.remove(), 500);
+});
+
+</script>
+<script>
+  function switchTheme(name){
+    const themes = {
+      blue: {
+        '--c': '#2962ff',
+        '--accent': '#3b3fe0',
+        '--bg': '#f7f9fc',
+        '--btn-grad': 'linear-gradient(90deg,#2962ff,#8ab4ff)'
+      },
+      cyan: {
+        '--c': '#00e5ff',
+        '--accent': '#0097a7',
+        '--bg': '#e0f7fa',
+        '--btn-grad': 'linear-gradient(90deg,#00e5ff,#2dd4bf)'
+      },
+      coral: {
+        '--c': '#ff6b6b',
+        '--accent': '#c62828',
+        '--bg': '#fff4f4',
+        '--btn-grad': 'linear-gradient(90deg,#ff6b6b,#ffd166)'
+      },
+      mint: {
+        '--c': '#5ee7df',
+        '--accent': '#00796b',
+        '--bg': '#e6fff9',
+        '--btn-grad': 'linear-gradient(90deg,#5ee7df,#b490ca)'
+      }
+    };
+    const t = themes[name];
+    for (const k in t) document.documentElement.style.setProperty(k, t[k]);
   }
   </script>
 
+
+<!-- ResumeGuru Ultra — ₹49 AI Review Block -->
+<div class="card" id="aiReviewBlock" style="max-width:960px; margin:40px auto; padding:20px; background:#0f172a; color:#e2e8f0; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); font-family:'Segoe UI',sans-serif;">
+  <h2 style="margin-top:0;">🧠 AI Resume Review — ₹49 में</h2>
+  <p class="sub">अपना रिज़्यूम अपलोड करें और AI से पाएं स्कोर, सुझाव और सुधार — तुरंत!</p>
+
+  <input type="file" id="resumeUpload" accept=".txt,.docx" style="margin-top:10px;" />
+  <br><br>
+
+  <!-- Payment Button -->
+  <button id="btnResumeReview" class="btn primary" 
+        style="padding:10px 16px; font-weight:700; border-radius:8px; background:#38bdf8; color:#0f172a; border:0;"
+        onclick="payResumeReview()">
+    ₹49 Resume Review
+  </button>
+  <br><br>
+
+  <!-- Review Button (locked until payment) -->
+  <button onclick="startReview()" class="btn ghost" 
+        style="padding:10px 16px; font-weight:700; border-radius:8px; background:#334155; color:#f1f5f9; border:0;">
+    ✅ मैंने भुगतान कर दिया — Review शुरू करें
+  </button>
+
+  <div id="reviewResult" style="margin-top:20px; white-space:pre-wrap; background:#1e293b; padding:15px; border-radius:8px; display:none;"></div>
+</div>
+
+<!-- Mammoth.js जोड़ें -->
+<script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+<!-- Cashfree SDK -->
+<script src="https://sdk.cashfree.com/js/ui/2.0.0/cashfree.sandbox.js"></script>
+
 <script>
-  async function collectAll(){
-    const data = {
-      name: $("name").value.trim(),
-      headline: $("headline").value.trim(),
-      email: $("email").value.trim(),
-      phone: $("phone").value.trim(),
-      location: $("location").value.trim(),
-      linkedin: $("linkedin").value.trim(),
-      website: "", // GitHub field removed
-      wa: $("wa").value.trim(),
-      qrTarget: $("qrTarget").value,
-      lang: $("lang").value,
-      objective: $("objective").value.trim(),
-      status: $("status").value,
-      education: lines("education"),
-      certs: lines("certs"),
-      exp: parseTimeline(lines("exp")),
-      projects: parseTimeline(lines("projects")),
-      skills: parseKVLines("skills"),
-      awards: lines("awards"),
-      languages: lines("languages"),
-      hobbies: lines("hobbies")
-    };
-    if(data.status!=="Experienced" && !data.exp.length){ data.exp = []; }
-  
-    const rawPhoto = await readImageDataURL($("photo").files[0]);
-    const photo = await squareCrop(rawPhoto, 500);
-  
-    let qrData="";
-    if(data.qrTarget==='linkedin') qrData=data.linkedin;
-    else if(data.qrTarget==='website') qrData=data.website;
-    else if(data.qrTarget==='whatsapp'){
-      const msg = `Hi ${data.name}, let's connect!`;
-      qrData = `https://wa.me/${toIntlPhone(data.wa||data.phone)}?text=${encodeURIComponent(msg)}`;
-    }
-    const qrImg = qrData? await makeQR(qrData) : null;
-  
-    return { data, photo, qrImg };
-  }
-  
-  function makeATSdoc(data){
-    const sec = (t)=> ({ text:t, bold:true, margin:[0,8,0,4] });
-    const body = [];
-    body.push({ text: `${data.name} | ${data.headline}`, bold:true, fontSize:14 });
-    const contact = [data.email, data.phone, data.location, data.linkedin].filter(Boolean).join(" | ");
-    if(contact) body.push({ text: contact, margin:[0,2,0,8] });
-    if(data.objective) { body.push(sec("Summary")); body.push({ text: data.objective }); }
-    if(data.education.length){ body.push(sec("Education")); data.education.forEach(e=> body.push({ text: "• "+e })); }
-    if(data.exp.length){
-      body.push(sec("Experience"));
-      data.exp.forEach(x=>{
-        body.push({ text: `• ${x.a} | ${x.b} | ${x.c}` });
-        x.hi.forEach(h=> body.push({ text: `   - ${h}` }));
+  const cashfree = new Cashfree({ mode: "sandbox" });
+  let paymentDone = false; // 👈 Payment flag
+
+  // Payment trigger
+  async function payResumeReview() {
+    const res = await fetch("/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: 49 })
+    });
+    const data = await res.json();
+
+    if (data.payment_session_id) {
+      cashfree.checkout({
+        paymentSessionId: data.payment_session_id,
+        redirectTarget: "_modal",
+        onSuccess: function() {
+          paymentDone = true;
+          alert("✅ Payment successful! अब आप Review शुरू कर सकते हैं।");
+        },
+        onFailure: function() {
+          alert("❌ Payment failed, कृपया दोबारा कोशिश करें।");
+        }
       });
+    } else {
+      alert("⚠️ Payment session create नहीं हुआ।");
     }
-    if(data.projects.length){
-      body.push(sec("Projects"));
-      data.projects.forEach(x=>{
-        body.push({ text: `• ${x.a} | ${x.b} | ${x.c}` });
-        x.hi.forEach(h=> body.push({ text:`   - ${h}` }));
-      });
+  }
+
+  // Review trigger (only if paid)
+  async function startReview() {
+    if (!paymentDone) {
+      alert("⚠️ पहले भुगतान करें, फिर Review शुरू होगा।");
+      return;
     }
-    if(data.skills.length){ body.push(sec("Skills")); body.push({ text: data.skills.map(s=> s.k+(s.v?` (${s.v}%)`:"")).join(", ") }); }
-    if(data.certs.length){ body.push(sec("Certifications")); data.certs.forEach(c=> body.push({ text:"• "+c })); }
-    if(data.awards.length){ body.push(sec("Achievements")); data.awards.forEach(a=> body.push({ text:"• "+a })); }
-    if(data.languages.length){ body.push(sec("Languages")); body.push({ text: data.languages.join(", ") }); }
-    if(data.hobbies.length){ body.push(sec("Interests")); body.push({ text: data.hobbies.join(", ") }); }
-  
-    return { pageSize:'A4', pageMargins:[36,36,36,36], content: body, defaultStyle:{ fontSize:10, lineHeight:1.3 } };
-  }
-  
-  function makePremiumDoc(data, photo, qrImg, theme, lang){
-    // Same as Part 3 — already included
-    // You can reuse makePremiumDoc from Part 3
-  }
-  
-  async function generatePDF(kind){ // 'premium' | 'ats'
-    try{
-      st("Preparing…");
-      const { data, photo, qrImg } = await collectAll();
-  
-      if ($("toggleDrive").checked || true) {
-        try { if (!signedEmail) await ensureSignedIn(); } catch(e){ /* Allow PDF without sign-in */ }
+
+    const file = document.getElementById("resumeUpload").files[0];
+    if (!file) {
+      alert("⚠️ कृपया पहले अपना रिज़्यूम अपलोड करें।");
+      return;
+    }
+
+    const resultBox = document.getElementById("reviewResult");
+    resultBox.style.display = "block";
+    resultBox.innerText = "⏳ ResumeGuru आपके रिज़्यूम का review कर रहा है...";
+
+    try {
+      const text = await extractText(file);
+
+      if (!text || !text.trim()) {
+        resultBox.innerText = "⚠️ फ़ाइल से टेक्स्ट नहीं मिला। कृपया .docx या .txt अपलोड करें।";
+        return;
       }
-  
-      const theme = THEME;
-      let dd;
-  
-      if(kind==='ats'){
-        dd = makeATSdoc(data);
+
+      const response = await fetch("https://resumeguru.onrender.com/api/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resume: text })
+      });
+
+      const data = await response.json();
+
+      if (data.ok) {
+        resultBox.innerText =
+          "✅ ATS Score: " + data.atsScore + "\n\n" +
+          "📋 Review:\n" + data.aiReview +
+          "\n\n🎁 Referral Cashback: ₹10 हर दोस्त पर\n🔥 Career Toolkit: ₹199 में Unlock करें";
       } else {
-        const langs = data.lang==='both' ? ['hi','en'] : [data.lang];
-        const pages = [];
-        langs.forEach(l=>{
-          const doc = makePremiumDoc(data, photo, qrImg, theme, l);
-          pages.push(...doc.content);
-          pages.push({ text:"", pageBreak:"after" });
-        });
-        pages.pop();
-        dd = { pageSize:'A4', pageMargins:[28,28,28,28], content: pages,
-               styles:{ name:{ fontSize:22, bold:true, color:'#2d3436' }, sec:{ fontSize:13, bold:true } },
-               defaultStyle:{ fontSize:10, lineHeight:1.28 } };
+        resultBox.innerText = "❌ Error: " + (data.error || "Unknown error");
       }
-  
-      st("Rendering PDF…");
-      currentName = `${kind==='ats' ? 'ATS' : 'Premium'}_${(data.name||'User').replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.pdf`;
-      currentBlob = await new Promise((res,rej)=> pdfMake.createPdf(dd).getBlob(b=>b?res(b):rej(new Error("PDF failed"))) );
-  
-      lastDriveLink = null;
-      if ($("toggleDrive").checked && signedEmail){
-        try { lastDriveLink = await uploadToDrive(currentName, currentBlob); } catch(e){ alert("Drive upload failed: "+(e.message||e)); }
-      }
-  
-      if (signedEmail){
-        try{
-          await logToSheet({
-            Timestamp: new Date().toLocaleString(),
-            Name: data.name, Email: data.email, Phone: data.phone, Location: data.location,
-            Status: data.status, Summary: data.objective,
-            Links: [data.linkedin].filter(Boolean).join(" | "),
-            Education: data.education.join(" || "),
-            Experience: data.exp.map(x=>`${x.a}|${x.b}|${x.c}|${x.hi.join(';')}`).join(" || "),
-            Projects: data.projects.map(x=>`${x.a}|${x.b}|${x.c}|${x.hi.join(';')}`).join(" || "),
-            Skills: data.skills.map(s=>`${s.k}:${s.v}`).join(", "),
-            Certs: data.certs.join(", "),
-            Awards: data.awards.join(", "),
-            Languages: data.languages.join(", "),
-            Hobbies: data.hobbies.join(", "),
-            DriveLink: lastDriveLink || ""
-          });
-        }catch(e){ /* ignore for UX */ }
-      }
-  
-      $("btnDownload").disabled=false;
-      $("btnShareWA").disabled=false;
-      st("Ready ✅");
-    }catch(e){
-      alert(e.message||"Error");
-      st("Error");
+    } catch (err) {
+      resultBox.innerText = "⚠️ Request failed: " + err.message;
     }
   }
+
+  async function extractText(file) {
+    const ext = (file.name.split(".").pop() || "").toLowerCase();
+
+    if (ext === "txt") {
+      return file.text();
+    }
+
+    if (ext === "docx") {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      return (result && result.value) || "";
+    }
+
+    throw new Error("Unsupported file type. कृपया .docx या .txt अपलोड करें।");
+  }
+
+
+// SheetDB send (optional)
+function sendToAdmin(data) {
+  const payload = {
+    Timestamp: new Date().toISOString(),
+    Name: data.name || "",
+    Phone: data.phone || "",
+    Email: data.email || "",
+    Status: data.status || "",
+    Skills: data.skills || "",
+    Objective: data.objective || ""
+  };
+
+  fetch("https://sheetdb.io/api/v1/726hn93v61ls9", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data: payload })
+  })
+  .then(res => console.log("✅ Resume data sent to Google Sheet"))
+  .catch(err => console.error("❌ SheetDB error", err));
+}
+
+// Referral link copy
+function shareReferral() {
+  navigator.clipboard.writeText("https://resumeguru.in/referral?code=DNX10");
+  alert("Referral लिंक कॉपी हो गया!");
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ResumeGuru Ultra — ₹199 Career Toolkit Upsell -->
+<div style="max-width:960px; margin:40px auto; padding:20px; background:#1e293b; color:#f1f5f9; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); font-family:'Segoe UI',sans-serif;">
+  <h2 style="margin-top:0; color:#facc15;">🔥 Career Toolkit — ₹199 में Unlock करें</h2>
+  <p style="font-size:15px; color:#cbd5e1;">Interview Questions, Resume Templates, Branding Pack, Cover Letter, Salary Scripts और Referral Scripts — सब एक जगह!</p>
+
+  <ul style="margin-left:20px; font-size:14px;">
+    <li>✅ 65+ Premium Interview Questions (Tech + HR + Situational)</li>
+    <li>✅ ATS + Premium Resume Templates</li>
+    <li>✅ Professional Cover Letter Template (English + Hindi)</li>
+    <li>✅ Salary Negotiation Scripts</li>
+    <li>✅ LinkedIn Branding & Referral Scripts</li>
+    <li>✅ Job Search Strategy Guide (Hindi + English)</li>
+  </ul>
+
+  <p style="margin-top:16px; font-size:14px; color:#94a3b8;">
+    यह Toolkit आपको सिर्फ नौकरी दिलाने में नहीं, बल्कि आपकी पहचान को एक ब्रांड बनाने और सही सैलरी पाने में मदद करती है।
+  </p>
+
+  <a href="upi://pay?pa=resumeguru@okaxis&pn=Career%20Toolkit&am=199&cu=INR" target="_blank" style="text-decoration:none;">
+    <button style="margin-top:12px; padding:12px 18px; font-weight:700; border-radius:8px; background:linear-gradient(135deg,#facc15,#f97316); color:#0f172a; border:0; cursor:pointer;">
+      ₹199 में Unlock करें
+    </button>
+  </a>
+  <button onclick="unlockToolkit()" style="margin-top:12px; margin-left:8px; padding:12px 18px; font-weight:700; border-radius:8px; background:#334155; color:#f1f5f9; border:0; cursor:pointer;">
+    ✅ मैंने भुगतान कर दिया — Toolkit दिखाओ
+  </button>
   
-  $("btnGeneratePremium").addEventListener("click", ()=>generatePDF('premium'));
-  $("btnGenerateATS").addEventListener("click", ()=>generatePDF('ats'));
+  <!-- This button is for testing purposes only. You can remove it before making your website live. -->
+    <!--<button onclick="resetToolkit()" title="Click to hide the toolkit and test again" style="margin-top:12px; margin-left:8px; padding:12px 18px; font-weight:700; border-radius:8px; background:#991b1b; color:#f1f5f9; border:0; cursor:pointer;">
+    (Testing) Toolkit Reset/Hide करें
+  </button> -->
   
-  $("btnDownload").addEventListener("click", ()=>{
-    if(!currentBlob) return;
-    const url=URL.createObjectURL(currentBlob);
-    const a=document.createElement('a');
-    a.href=url; a.download=currentName||"Resume.pdf"; a.click();
-    setTimeout(()=>URL.revokeObjectURL(url),500);
+  <div id="statusMessage" style="margin-top: 15px; color: #a5b4fc; font-size: 14px; text-align: center; min-height: 20px;"></div>
+</div>
+
+<!-- ===================== HIDDEN TOOLKIT SECTION ===================== -->
+<!-- This entire section will ONLY be visible after payment confirmation -->
+<div id="careerToolkitBlock" style="display:none; max-width:960px; margin:40px auto; padding:20px; background:#0f172a; color:#f8fafc; border-radius:12px; border: 1px solid #334155;">
+
+  <!-- Download Entire Toolkit Button -->
+  <div style="text-align:center; padding: 10px; background-color: #1e293b; border-radius: 8px; margin-bottom: 30px;">
+    <h2 style="color:#facc15; margin-top:0;">🚀 आपकी Premium Toolkit तैयार है!</h2>
+    <p style="color:#cbd5e1; margin-bottom:16px;">नीचे दिए गए बटन पर क्लिक करके पूरी टूलकिट को एक PDF फाइल में डाउनलोड करें।</p>
+    <button onclick="printToolkit('careerToolkitBlock')" id="downloadPdfButton" style="padding:12px 20px; font-weight:700; border-radius:8px; background:#38bdf8; color:#0f172a; border:0; cursor:pointer; font-size: 16px;">
+      ⬇️ पूरी टूलकिट PDF में डाउनलोड करें
+    </button>
+  </div>
+  
+  <!-- ===== ATS + Premium Resume Template ===== -->
+  <h2 style="color:#facc15;">📄 ATS + Premium Resume Template</h2>
+  <p style="color:#cbd5e1;">यह एक कॉलम वाला, सरल और ATS-फ्रेंडली फॉर्मेट है। जॉब डिस्क्रिप्शन (JD) से कीवर्ड्स का उपयोग करें।</p>
+  <pre style="white-space:pre-wrap; background:#1e293b; padding:15px; border-radius:8px; font-size:14px; line-height:1.5;">
+<b>[YOUR NAME]</b>
+[Phone] • [Email] • [LinkedIn] • [City, State]
+
+<b>SUMMARY</b>
+Results-driven [Role] with [X] years in [Industry]. Skilled in [Skills]. Delivered [impact] at [Company] using [tools]. Seeking to contribute to [target role/team].
+
+<b>EXPERIENCE</b>
+<b>[Job Title] — [Company], [City]</b> (MM/YYYY – MM/YYYY)
+• Led [project] resulting in [impact: +[X]% / −[X]% / ₹[value]]
+• Managed [team/task] using [tool]; improved [metric] by [X]%
+• Created [process/report] that reduced [cost/time] by [X]%
+<b>Key Skills Used:</b> [Skill 1], [Skill 2], [Tool], [Method]
+
+<b>[Job Title] — [Company], [City]</b> (MM/YYYY – MM/YYYY)
+• Drove [initiative] with [action]; achieved [result]
+• Collaborated with [stakeholders] to deliver [outcome]
+• Automated [task] using [tech], saving [X] hours/week
+
+<b>EDUCATION</b>
+[Bachelor’s/Master’s] in [Field], [University], [Year]
+Certifications: [Cert 1], [Cert 2]
+
+<b>SKILLS</b>
+• Technical: [Tool 1], [Tool 2], [Cloud/DB], [Language]
+• Business: Stakeholder mgmt, Reporting, Estimation
+• Soft: Communication, Ownership, Problem-solving
+
+<b>PROJECTS</b>
+<b>[Project Name]</b> — Built [feature] using [stack]; improved [metric] by [X]%
+
+<b>ACHIEVEMENTS</b>
+• Awarded [Award] for [reason] • Published [article/talk]
+
+<b>LANGUAGES</b>
+English (Fluent), Hindi (Native)
+  </pre>
+
+  <!-- ===== Professional Cover Letter Template ===== -->
+  <h2 style="color:#facc15;">✉️ Professional Cover Letter Template</h2>
+  <div style="background:#0b1324; border:1px solid #23314f; border-radius:8px; padding:16px; font-size:14px;">
+    <h3 style="margin-top:0; color:#a5b4fc;">English Version</h3>
+    <pre style="white-space:pre-wrap; background:#1e293b; padding:15px; border-radius:8px; font-size:14px; line-height:1.5;">
+Subject: Application for the [Job Title] Role
+
+Dear [Hiring Manager Name],
+
+I am writing to express my keen interest in the [Job Title] position at [Company Name], which I discovered on [Platform, e.g., LinkedIn]. With my [X] years of experience in [Your Industry/Field] and a proven track record of [mention a key achievement, e.g., increasing efficiency by Y%], I am confident I possess the skills and drive necessary to excel in this role.
+
+In my previous role at [Previous Company], I was responsible for [mention 1-2 key responsibilities] which directly aligns with the requirements you've outlined. I am particularly skilled in [mention 2-3 key skills from JD, e.g., Project Management, Data Analysis, Client Relations].
+
+I am highly impressed with [Company Name]'s work in [mention something specific about the company], and I am eager to contribute to your team's success. My resume is attached for your review. Thank you for your time and consideration.
+
+Sincerely,
+[Your Name]
+[Your Phone Number]
+[Your LinkedIn Profile URL]
+    </pre>
+    <h3 style="color:#a5b4fc;">Hindi Version</h3>
+    <pre style="white-space:pre-wrap; background:#1e293b; padding:15px; border-radius:8px; font-size:14px; line-height:1.5;">
+विषय: [Job Title] पद के लिए आवेदन
+
+प्रिय [Hiring Manager Name],
+
+मैं [Company Name] में [Job Title] पद के लिए अपनी गहरी रुचि व्यक्त करने के लिए लिख रहा हूँ, जिसके बारे में मुझे [Platform] से पता चला। [Your Industry/Field] में मेरे [X] वर्षों के अनुभव और [mention a key achievement] के सिद्ध ट्रैक रिकॉर्ड के साथ, मुझे विश्वास है कि मैं इस भूमिका में उत्कृष्टता प्राप्त करने के लिए आवश्यक कौशल रखता हूँ।
+
+[Previous Company] में अपनी पिछली भूमिका में, मैं [mention 1-2 key responsibilities] के लिए जिम्मेदार था, जो आपके द्वारा बताई गई आवश्यकताओं से सीधे मेल खाता है। मैं विशेष रूप से [mention 2-3 key skills from JD] में कुशल हूँ।
+
+मैं [Company Name] के [mention something specific] क्षेत्र में काम से बहुत प्रभावित हूँ और आपकी टीम की सफलता में योगदान देने के लिए उत्सुक हूँ। मेरा रिज्यूमे आपके अवलोकन के लिए संलग्न है। आपके समय और विचार के लिए धन्यवाद।
+
+साभार,
+[आपका नाम]
+[आपका फ़ोन नंबर]
+[आपकी लिंक्डइन प्रोफाइल URL]
+    </pre>
+  </div>
+
+  <!-- ===== 65+ Interview Questions + STAR Answers ===== -->
+  <h2 style="color:#facc15;">🧠 65+ Interview Questions + STAR Answers</h2>
+  <p style="color:#cbd5e1;">Each answer uses STAR (Situation, Task, Action, Result). Personalize placeholders: [X], [industry], [impact].</p>
+
+  <div style="background:#0b1324; border:1px solid #23314f; border-radius:8px; padding:16px;">
+    <details open>
+      <summary style="cursor:pointer; font-weight:700; color:#a5b4fc;">Core HR Questions (1–10)</summary>
+      <ol style="font-size:14px; line-height:1.6; margin-left:18px;">
+        <li><b>Tell me about yourself.</b><br>
+          EN: I’m a results-driven professional with [X] years in [industry]. I specialize in [skills] and helped [company] achieve [impact].<br>
+          HI: मैं [industry] में [X] वर्षों का अनुभव रखने वाला प्रोफेशनल हूँ। मेरी विशेषज्ञता [skills] में है और मैंने [company] के लिए [impact] दिया।
+        </li>
+        <li><b>Why do you want this job?</b><br>
+          S: Followed your mission and growth. T: Contribute to [team/goal]. A: Skills in [area] align with JD. R: Add measurable value and grow.<br>
+          HI: S: मैंने आपकी कंपनी की प्रगति देखी है। T: [goal] में योगदान देना चाहता हूँ। A: मेरे कौशल JD से मेल खाते हैं। R: मैं मूल्य जोड़ सकता हूँ।
+        </li>
+        <li><b>Strengths.</b><br>
+          S: Urgent deliverables often assigned. T: Onboard clients fast. A: Clear comms, ownership, batching tasks. R: 15+ clients in 5 days, zero errors.<br>
+          HI: S: मुझे ज़िम्मेदार काम मिलते थे। T: तेज़ ऑनबोर्डिंग। A: स्पष्ट संवाद, जिम्मेदारी। R: 5 दिनों में 15+ क्लाइंट।
+        </li>
+        <li><b>Weaknesses.</b><br>
+          S: Overcommitment. T: Affected focus. A: Prioritization + delegation system. R: Consistent deadlines met.<br>
+          HI: S: पहले ज़्यादा काम लेता था। A: प्राथमिकता/डेलिगेशन अपनाया। R: समय पर काम पूरा।
+        </li>
+        <li><b>Biggest achievement.</b><br>
+          S: 7-day launch deadline. T: Lead build. A: MVP in 5 days, aligned stakeholders. R: 1K users week 1, [X]% retention.<br>
+          HI: S: 7 दिन में लॉन्च। A: 5 दिन में MVP। R: पहले हफ्ते 1000 यूज़र।
+        </li>
+        <li><b>Handling pressure.</b><br>
+          S: Multiple parallel tasks. T: Maintain quality. A: Break into sprints, micro-deadlines, async notes. R: On-time delivery, fewer defects.<br>
+          HI: A: काम को छोटे हिस्सों में बाँटना, माइक्रो-डेडलाइन। R: समय पर डिलीवरी।
+        </li>
+        <li><b>Conflict at work.</b><br>
+          S: Disagreement on approach. T: Resolve without friction. A: Facilitate options, pick data-backed plan. R: Better results, trust improved.<br>
+          HI: S: मतभेद। A: डेटा के आधार पर समाधान। R: बेहतर नतीजे।
+        </li>
+        <li><b>Feedback handling.</b><br>
+          S: Critical feedback on reports. T: Improve clarity. A: Standardize templates, examples. R: Fewer revisions, faster approvals.<br>
+          HI: A: टेम्पलेट और उदाहरण जोड़े। R: कम सुधार, जल्दी मंज़ूरी।
+        </li>
+        <li><b>5-year vision.</b><br>
+          S: Aim to deepen [domain]. T: Build impact in [function]. A: Certifications + projects. R: Become [title] contributing to org goals.<br>
+          HI: S: [domain] में विशेषज्ञता। A: सर्टिफिकेशन/प्रोजेक्ट।
+        </li>
+        <li><b>Why should we hire you?</b><br>
+          S: Team needs [skills]. T: Deliver outcomes fast. A: Owner mindset, empathy, data-driven execution. R: Reduced cycle time by [X]%.<br>
+          HI: A: मालिकाना सोच, empathy, तेज़ execution।
+        </li>
+      </ol>
+    </details>
+
+    <details>
+      <summary style="cursor:pointer; font-weight:700; color:#a5b4fc;">Execution & Ownership (11–20)</summary>
+      <ol start="11" style="font-size:14px; line-height:1.6; margin-left:18px;">
+        <li><b>Prioritizing tasks.</b><br> Eisenhower Matrix + batching similar tasks. HI: Eisenhower मैट्रिक्स + बैचिंग।</li>
+        <li><b>Meeting deadlines.</b><br> S: Tight release. A: Back-plan, buffer risks. R: On-time with [X]% defects reduction. HI: बैक-प्लानिंग, बफर।</li>
+        <li><b>Decision-making.</b><br> S: Multiple options. A: Compare ROI, risk, timeline. R: Picked plan that saved ₹[X]. HI: डेटा-आधारित निर्णय।</li>
+        <li><b>Delegation.</b><br> S: Overload. A: Assign by skill, track with checkpoints. R: Faster throughput. HI: कौशल के अनुसार सौंपना।</li>
+        <li><b>Ownership story.</b><br> S: Blocked dependency. A: Unblocked via direct outreach. R: Milestone met. HI: खुद जिम्मेदारी लेकर unblock।</li>
+        <li><b>Quality assurance.</b><br> S: Defects. A: QA checklist, peer review. R: −[X]% bugs. HI: QA चेकलिस्ट।</li>
+        <li><b>Handling failure.</b><br> S: Missed target. A: Post-mortem, corrective plan. R: Next cycle +[X]% improvement. HI: सीख लेकर सुधार।</li>
+        <li><b>Multitasking.</b><br> Time-blocking + kanban. HI: टाइम-ब्लॉकिंग + कानबन।</li>
+        <li><b>Client escalation.</b><br> S: Critical complaint. A: 1:1 call, fix plan, timeline. R: Retained client. HI: त्वरित समाधान।</li>
+        <li><b>Process improvement.</b><br> S: Slow handoffs. A: SOP + automation. R: −[X]% TAT. HI: SOP/ऑटोमेशन।</li>
+      </ol>
+    </details>
+
+    <details>
+      <summary style="cursor:pointer; font-weight:700; color:#a5b4fc;">Teamwork & Leadership (21–30)</summary>
+       <ol start="21" style="font-size:14px; line-height:1.6; margin-left:18px;">
+        <li><b>Leadership example.</b><br> S: Cross-functional project. A: Align goals, cadence. R: Launched on-time. HI: क्रॉस-फंक्शनल नेतृत्व।</li>
+        <li><b>Motivating team.</b><br> S: Low morale. A: Recognitions, clear goals. R: Engagement +[X]%. HI: मान्यता/लक्ष्य।</li>
+        <li><b>Onboarding new member.</b><br> S: Ramp-up needed. A: Buddy + 30-60-90 plan. R: Productivity in 3 weeks. HI: बडी/प्लान।</li>
+        <li><b>Conflict resolution in team.</b><br> S: Priority clash. A: Shared roadmap. R: Alignment restored. HI: साझा रोडमैप।</li>
+        <li><b>Cross-team collaboration.</b><br> S: Dependency block. A: Joint standups. R: Faster unblock. HI: संयुक्त स्टैंडअप।</li>
+        <li><b>Stakeholder management.</b><br> S: Differing expectations. A: SLAs + weekly updates. R: Trust improved. HI: SLA/अपडेट।</li>
+        <li><b>Training initiative.</b><br> S: Skill gaps. A: Micro-workshops. R: Error rate −[X]%. HI: वर्कशॉप्स।</li>
+        <li><b>Escalation management.</b><br> S: Major outage. A: War-room, timelines. R: Restore in [X] hrs. HI: वार-रूम।</li>
+        <li><b>Delegating under pressure.</b><br> S: Tight deadline. A: Divide by expertise. R: Delivery on-time. HI: विशेषज्ञता के अनुसार।</li>
+        <li><b>Mentoring junior.</b><br> S: New hire stuck. A: Weekly coaching. R: Independent in [X] weeks. HI: कोचिंग।</li>
+      </ol>
+    </details>
+    
+    <details>
+      <summary style="cursor:pointer; font-weight:700; color:#a5b4fc;">Communication & Impact (31–40)</summary>
+      <ol start="31" style="font-size:14px; line-height:1.6; margin-left:18px;">
+        <li><b>Presentations.</b><br> A: Story-first, visuals, outcomes. R: Buy-in achieved. HI: कहानी/परिणाम।</li>
+        <li><b>Reporting.</b><br> A: Defined metrics, dashboards. R: Decisions faster. HI: मैट्रिक्स/डैशबोर्ड।</li>
+        <li><b>Negotiation.</b><br> S: Vendor pricing. A: Benchmark + alternatives. R: Saved ₹[X]. HI: बेंचमार्किंग।</li>
+        <li><b>Risk management.</b><br> A: Identify, mitigate, monitor. R: No surprises. HI: जोखिम नियंत्रण।</li>
+        <li><b>Customer success story.</b><br> S: Churn risk. A: Success plan. R: Renewed for [X] months. HI: सक्सेस प्लान।</li>
+        <li><b>Process documentation.</b><br> A: SOPs. R: Faster onboarding. HI: SOP।</li>
+        <li><b>Data-backed decision.</b><br> S: Competing ideas. A: Test + measure. R: Picked higher ROI. HI: डेटा-टेस्ट।</li>
+        <li><b>Handling criticism.</b><br> A: Thank + clarify + improve. R: Trust improved. HI: सुधार।</li>
+        <li><b>Change management.</b><br> S: New tool. A: Training + pilots. R: Adoption [X]%. HI: प्रशिक्षण।</li>
+        <li><b>Measuring success.</b><br> A: Define KPIs. R: Track outcomes. HI: KPI।</li>
+      </ol>
+    </details>
+
+    <details>
+      <summary style="cursor:pointer; font-weight:700; color:#a5b4fc;">Role-fit & Growth (41–50)</summary>
+      <ol start="41" style="font-size:14px; line-height:1.6; margin-left:18px;">
+        <li><b>Learning habits.</b><br> A: Weekly courses + practice. R: New cert in [X]. HI: नियमित सीख।</li>
+        <li><b>Stuck scenario.</b><br> A: Ask, research, prototype. R: Unblocked. HI: शोध/प्रोटोटाइप।</li>
+        <li><b>Ideal work environment.</b><br> A: Clear goals, autonomy, feedback. HI: स्पष्ट लक्ष्य/स्वतंत्रता।</li>
+        <li><b>Tools familiarity.</b><br> A: Hands-on with [tools]. R: Faster delivery. HI: टूल्स।</li>
+        <li><b>Salary expectations.</b><br> A: Market benchmarks, role scope. HI: बाज़ार आँकड़े।</li>
+        <li><b>Team vs solo.</b><br> A: Prefer team; solo when needed. HI: टीम प्राथमिक।</li>
+        <li><b>Leaving last job.</b><br> A: Growth/role mismatch; positive exit. HI: विकास कारण।</li>
+        <li><b>Handling tight deadlines.</b><br> A: Scope trim + focus. R: On-time. HI: स्कोप/फोकस।</li>
+        <li><b>Unique value.</b><br> A: Owner mindset + empathy + speed. HI: अनोखा मिश्रण।</li>
+        <li><b>Questions for us.</b><br> A: Success metrics, team rituals, 90-day goals. HI: सफलता मापदंड।</li>
+      </ol>
+    </details>
+
+    <details>
+      <summary style="cursor:pointer; font-weight:700; color:#fca5a5;">🔥 Premium Situational & Technical (51–65)</summary>
+      <ol start="51" style="font-size:14px; line-height:1.6; margin-left:18px;">
+        <li><b>Handling a difficult colleague.</b><br>A: Address privately, focus on work goals, find common ground. Escalate to manager only if behavior persists. HI: निजी तौर पर बात करें, काम पर ध्यान दें।</li>
+        <li><b>Disagreeing with your manager.</b><br>A: Present your view with data, in private. Respect their final decision. HI: डेटा के साथ अपना पक्ष रखें, अंतिम निर्णय का सम्मान करें।</li>
+        <li><b>Explaining a technical concept to a non-technical person.</b><br>A: Use analogies, focus on the 'why' and the 'benefit', avoid jargon. HI: उदाहरणों का प्रयोग करें, 'क्यों' और 'लाभ' पर ध्यान दें।</li>
+        <li><b>A time you had to learn something quickly.</b><br>S: New project required [New Skill]. A: Used online docs, built a small prototype, asked targeted questions. R: Became proficient in [X] days. HI: जल्दी सीखने के लिए प्रोटोटाइप बनाया।</li>
+        <li><b>How do you stay updated with industry trends?</b><br>A: Follow key blogs, attend webinars, participate in online communities. HI: ब्लॉग, वेबिनार और ऑनलाइन समुदायों से।</li>
+        <li><b>Describe a project that failed. What did you learn?</b><br>S: Project missed its goals. A: Conducted a post-mortem to identify root causes (e.g., unclear scope). R: Implemented a new checklist for future projects, improving success rate. HI: असफलता से सीखा और भविष्य के लिए प्रक्रिया सुधारी।</li>
+        <li><b>How would you handle a sudden change in project priorities?</b><br>A: Acknowledge the change, ask for clarification on new goals, and re-prioritize tasks. Communicate the impact on timelines to all stakeholders. HI: बदलाव को समझें, लक्ष्य स्पष्ट करें और टाइमलाइन पर प्रभाव बताएं।</li>
+        <li><b>What is your approach to code reviews? (Technical)</b><br>A: I check for correctness, readability, and performance. I provide constructive feedback and suggest alternatives. HI: मैं कोड की शुद्धता, पठनीयता और प्रदर्शन की जांच करता हूँ।</li>
+        <li><b>How do you debug a complex issue? (Technical)</b><br>A: Isolate the problem, use logging/debugging tools, replicate the issue in a controlled environment, and review recent changes. HI: समस्या को अलग करें, डिबगिंग टूल का उपयोग करें।</li>
+        <li><b>Tell me about API and its use. (Technical)</b><br>A: An API (Application Programming Interface) is a set of rules that allows different software applications to communicate with each other. For example, a food delivery app uses Google Maps API to show routes. HI: API दो सॉफ्टवेयर को बात करने का एक जरिया है।</li>
+        <li><b>What's the difference between Git and GitHub? (Technical)</b><br>A: Git is a version control system (software) to track changes on your local machine. GitHub is a cloud-based hosting service that lets you manage Git repositories. HI: Git एक सॉफ्टवेयर है, GitHub एक ऑनलाइन सर्विस है।</li>
+        <li><b>What is Agile methodology?</b><br>A: It's an iterative approach to project management where work is broken into small cycles called 'sprints'. It values collaboration and flexibility. HI: यह काम को छोटे-छोटे हिस्सों (sprints) में बांटने की एक विधि है।</li>
+        <li><b>How would you improve one of our products?</b><br>A: Research their product first. Suggest a specific, data-backed improvement. Example: "I noticed your app's onboarding could be faster. Adding a social login option could reduce sign-up time by [X]%." HI: उनके उत्पाद पर शोध करें और एक ठोस सुझाव दें।</li>
+        <li><b>What are your salary expectations?</b><br>A: Based on my research for a [Your Role] with [X] years of experience in [Your City], I'm expecting a range between ₹[Amount 1] and ₹[Amount 2]. I'm open to discussion based on the role's responsibilities. HI: बाजार के अनुसार, मैं ₹[Amount 1] से ₹[Amount 2] के बीच उम्मीद कर रहा हूँ।</li>
+        <li><b>Do you have any questions for me?</b><br>A: Yes. 1) What does success look like in this role in the first 90 days? 2) What is the biggest challenge the team is currently facing? 3) What are the next steps in the interview process? HI: हाँ। इस भूमिका में पहले 90 दिनों में सफलता कैसी दिखती है?</li>
+      </ol>
+    </details>
+  </div>
+
+  <!-- ===== Salary Negotiation Scripts ===== -->
+  <h2 style="color:#facc15;">💰 Salary Negotiation Scripts</h2>
+  <div style="background:#0b1324; border:1px solid #23314f; border-radius:8px; padding:16px; font-size:14px;">
+    <h3 style="margin-top:0; color:#a5b4fc;">Key Phrases (English)</h3>
+    <ul>
+      <li><b>When they ask for your expectation:</b> "Based on my skills and market research for this role, I'm looking for a compensation in the range of ₹X to ₹Y. However, I'm flexible and open to discussing the complete benefits package."</li>
+      <li><b>When you get an offer:</b> "Thank you so much for the offer! I'm very excited about this opportunity. I'd like to discuss the compensation. Based on my [X] years of experience and the value I'll bring, I was hoping for a figure closer to ₹Y. Would that be possible?"</li>
+      <li><b>Justifying your ask:</b> "Considering my expertise in [Skill 1] and [Skill 2], which I see are crucial for this role, I believe a higher compensation is justified."</li>
+    </ul>
+    <h3 style="color:#a5b4fc;">मुख्य वाक्यांश (Hindi)</h3>
+    <ul>
+      <li><b>जब वे आपकी अपेक्षा पूछते हैं:</b> "इस भूमिका के लिए मेरे कौशल और बाजार अनुसंधान के आधार पर, मैं ₹X से ₹Y की सीमा में वेतन की तलाश में हूँ। हालांकि, मैं लचीला हूँ और पूरे लाभ पैकेज पर चर्चा करने के लिए तैयार हूँ।"</li>
+      <li><b>जब आपको प्रस्ताव मिलता है:</b> "प्रस्ताव के लिए बहुत-बहुत धन्यवाद! मैं इस अवसर को लेकर बहुत उत्साहित हूँ। मैं वेतन पर चर्चा करना चाहूँगा। मेरे [X] वर्षों के अनुभव और मेरे द्वारा लाए जाने वाले मूल्य के आधार पर, मैं ₹Y के करीब एक आंकड़े की उम्मीद कर रहा था। क्या यह संभव होगा?"</li>
+      <li><b>अपनी मांग को सही ठहराना:</b> "[Skill 1] और [Skill 2] में मेरी विशेषज्ञता को देखते हुए, जो इस भूमिका के लिए महत्वपूर्ण हैं, मेरा मानना ​​है कि एक उच्च वेतन उचित है।"</li>
+    </ul>
+  </div>
+
+  <!-- ===== LinkedIn Branding & Referral Scripts ===== -->
+  <h2 style="color:#facc15;">🔗 LinkedIn Branding & Referral — Detailed Guide</h2>
+  <div style="background:#0b1324; border:1px solid #23314f; border-radius:8px; padding:16px; font-size:14px;">
+    <h3 style="margin-top:0; color:#a5b4fc;">1) Profile Headline (pick one)</h3>
+    <ul>
+      <li><b>English:</b> Helping [industry] solve [problem] using [skill]</li>
+      <li><b>English:</b> [Role] | [Tool] Specialist | Driving [impact]</li>
+      <li><b>Hindi:</b> [Role] | [Skill] विशेषज्ञ | [impact] हासिल करने में मदद</li>
+    </ul>
+    <h3 style="color:#a5b4fc;">2) About Section (English + Hindi)</h3>
+    <p><b>English:</b> I’m a passionate [role] with [X] years in [industry]. I specialize in [skills], and I’ve helped [company] achieve [impact]. I care about ethical growth, clear communication, and continuous learning.</p>
+    <p><b>Hindi:</b> मैं एक उत्साही [role] हूँ, जिसके पास [industry] में [X] वर्षों का अनुभव है। मेरी विशेषज्ञता [skills] में है और मैंने [company] के लिए [impact] दिया। मैं ईमानदार विकास, स्पष्ट संवाद और निरंतर सीखने को महत्व देता हूँ।</p>
+    <h3 style="color:#a5b4fc;">3) Referral DM Scripts</h3>
+    <p><b>Cold DM (English):</b> Hi [Name], I noticed you work at [Company]. I’m exploring roles in [domain] and believe my experience in [skills] aligns well. Could you guide me to the right person or share if any openings match my profile? Happy to share my resume. Thanks!</p>
+    <p><b>Cold DM (Hindi):</b> नमस्ते [Name], देखा कि आप [Company] में काम करते हैं। मैं [domain] में अवसर ढूँढ रहा हूँ और मेरे [skills] इस रोल से मेल खाते हैं। क्या आप सही व्यक्ति तक पहुँचा सकते हैं या कोई उपयुक्त ओपनिंग साझा कर सकते हैं? धन्यवाद!</p>
+  </div>
+  
+  <!-- ===== Job Search Strategies ===== -->
+  <h2 style="color:#facc15;">📚 Job Search Strategies — Hindi + English</h2>
+  <div style="background:#0b1324; border:1px solid #23314f; border-radius:8px; padding:16px; font-size:14px;">
+    <h3 style="margin-top:0; color:#a5b4fc;">English</h3>
+    <ul>
+      <li><b>Apply early:</b> Most roles close within 7 days. Apply within the first 48 hours.</li>
+      <li><b>Match keywords:</b> Mirror skills from the Job Description in your resume and LinkedIn headline.</li>
+      <li><b>Follow up:</b> 3–5 days post-application with a crisp DM to the recruiter or hiring manager.</li>
+      <li><b>Targeted search:</b> Use LinkedIn filters: "Actively hiring", "Remote", "Easy Apply".</li>
+      <li><b>Tracking:</b> Keep a simple Google Sheet: company, role, date, status, link to JD.</li>
+      <li><b>Referrals:</b> Comment with value on posts by people from your target companies. Then send a warm DM.</li>
+    </ul>
+    <h3 style="color:#a5b4fc;">हिंदी</h3>
+    <ul>
+      <li><b>जल्दी आवेदन करें:</b> ज़्यादातर नौकरियाँ 7 दिनों में बंद हो जाती हैं। पहले 48 घंटों में ही आवेदन करें।</li>
+      <li><b>JD के keywords मिलाएँ:</b> रिज़्यूम और लिंक्डइन हेडलाइन में JD वाले ही शब्द डालें।</li>
+      <li><b>Follow-up करें:</b> Apply करने के 3-5 दिन बाद रिक्रूटर को एक छोटा DM भेजें।</li>
+      <li><b>LinkedIn filters का उपयोग करें:</b> “Actively hiring”, “Remote”, “Easy Apply” का उपयोग करें।</li>
+      <li><b>ट्रैकिंग:</b> Google Sheet में कंपनी, रोल, तारीख, और स्टेटस का रिकॉर्ड रखें।</li>
+      <li><b>Referral funnel:</b> अपनी पसंदीदा कंपनियों के कर्मचारियों के पोस्ट पर मूल्यवान कमेंट करें, फिर DM भेजें।</li>
+    </ul>
+  </div>
+    
+  <p style="margin-top:20px; text-align:center; color:#94a3b8; font-size: 12px;">🎁 Referral Cashback: ₹10 हर दोस्त पर • 🔥 Toolkit Value: ₹199 में सब कुछ — कोई hidden charges नहीं</p>
+</div>
+
+<!-- ===================== Unlock + Print Logic (FIXED & IMPROVED) ===================== -->
+<script>
+  function showStatus(message, type = 'success') {
+      const statusDiv = document.getElementById('statusMessage');
+      if (statusDiv) {
+          statusDiv.innerText = message;
+          statusDiv.style.color = type === 'success' ? '#a5b4fc' : '#fca5a5';
+          setTimeout(() => { statusDiv.innerText = ''; }, 4000); // Message disappears after 4 seconds
+      }
+  }
+
+  // Function to show the toolkit after payment confirmation
+  function unlockToolkit() {
+    localStorage.setItem("rg_toolkit_unlocked", "yes");
+    const block = document.getElementById("careerToolkitBlock");
+    
+    if (block) {
+      block.style.display = "block";
+      block.scrollIntoView({ behavior: 'smooth' });
+      showStatus('✅ Toolkit unlocked successfully!');
+    }
+  }
+
+  // NEW: Function to reset and hide the toolkit for testing
+  //<!-- function resetToolkit() {
+    //  localStorage.removeItem("rg_toolkit_unlocked");
+      //const block = document.getElementById("careerToolkitBlock");
+      //if (block) {
+    //      block.style.display = "none";
+      //}
+     // showStatus('🔄 Toolkit has been locked/hidden for testing. Refresh to check.', 'reset');
+  //}-->
+  
+  // Function to print the entire toolkit as a PDF
+  function printToolkit(toolkitId) {
+    const toolkitContent = document.getElementById(toolkitId).innerHTML;
+    const printWindow = window.open('', '_blank', 'height=800,width=800');
+    
+    printWindow.document.write('<html><head><title>Career Toolkit by ResumeGuru</title>');
+    printWindow.document.write(`
+      <style>
+        body { font-family: sans-serif; line-height: 1.5; color: #333; }
+        h2, h3 { color: #1e293b; border-bottom: 2px solid #facc15; padding-bottom: 5px; }
+        pre, div[style*="background"] { 
+          background-color: #f1f5f9 !important; 
+          color: #1e293b !important;
+          border: 1px solid #cbd5e1; padding: 15px; border-radius: 8px; 
+          white-space: pre-wrap; word-wrap: break-word;
+        }
+        ul, ol { padding-left: 20px; }
+        b { color: #0f172a; }
+        button, #downloadPdfButton { display: none !important; } /* Hide all buttons in PDF */
+        summary { cursor: default; }
+      </style>
+    `);
+    printWindow.document.write('</head><body>');
+    printWindow.document.write('<h1>ResumeGuru Career Toolkit</h1>');
+    printWindow.document.write(toolkitContent);
+    printWindow.document.write('</body></html>');
+    
+    printWindow.document.close();
+    
+    setTimeout(() => {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+    }, 250);
+  }
+
+  // Check on page load if the toolkit was already unlocked
+  window.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("rg_toolkit_unlocked") === "yes") {
+      const block = document.getElementById("careerToolkitBlock");
+      if (block) {
+        block.style.display = "block";
+      }
+    }
   });
-  
-  $("btnShareWA").addEventListener("click", ()=>{
-    const name = $("name").value.trim() || "User";
-    const phone = toIntlPhone(($("wa").value||$("phone").value||"").trim());
-    if(!phone){ alert("WhatsApp नंबर/फोन add करें"); return; }
-    let msg = `नमस्ते ${name}, आपका resume तैयार है.`;
-    msg += lastDriveLink ? ` PDF लिंक: ${lastDriveLink}` : ` मैंने PDF डाउनलोड कर लिया है.`;
-    const link = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-    window.open(link, "_blank");
-  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="https://sdk.cashfree.com/js/ui/2.0.0/cashfree.sandbox.js"></script>
+<script>
+  const cashfree = new Cashfree({ mode: "sandbox" });
+
+  function payNow() {
+    cashfree.checkout({
+      paymentSessionId: "REPLACE_WITH_SESSION_ID", // backend से मिला हुआ
+      redirectTarget: "_modal"
+    });
+  }
+</script>
+
+
+<!-- ResumeGuru Ultra — अंतिम निर्देश (वेबसाइट के नीचे डालें) -->
+<div style="font-family:'Segoe UI',sans-serif; max-width:960px; margin:40px auto 20px; padding:20px; background:#1e293b; color:#f1f5f9; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08);">
+  <h2 style="margin-top:0; color:#facc15;">🚀 अंतिम निर्देश — Resume बनाते समय ध्यान रखें</h2>
+
+  <h3 style="color:#38bdf8;">ATS Resume क्यों चुनें?</h3>
+  <ul style="margin-left:20px;">
+    <li>यह टेक्स्ट-आधारित होता है और जॉब पोर्टल्स या कंपनी के ATS सिस्टम में आसानी से स्कैन होता है।</li>
+    <li>अगर आपका कंटेंट लंबा है या आप ऑनलाइन अप्लाई कर रहे हैं, तो ATS सबसे सुरक्षित विकल्प है।</li>
+    <li>यह शॉर्टलिस्टिंग की पहली दीवार पार करने में मदद करता है।</li>
+  </ul>
+
+  <h3 style="color:#38bdf8;">Premium Resume कब चुनें?</h3>
+  <ul style="margin-left:20px;">
+    <li>अगर आप WhatsApp, ईमेल या रेफ़रल से डायरेक्ट शेयर करना चाहते हैं, तो Premium Resume सबसे प्रभावशाली होता है।</li>
+    <li>इसमें फोटो, QR कोड और शानदार डिज़ाइन होता है जो इंटरव्यू में रीकॉल बढ़ाता है।</li>
+    <li>यह आपको भीड़ से अलग दिखाने में मदद करता है।</li>
+  </ul>
+
+  <h3 style="color:#38bdf8;">Resume बनाते समय ये बातें ज़रूर ध्यान रखें:</h3>
+  <ul style="margin-left:20px;">
+    <li>हर सेक्शन में 4–5 पॉइंट रखें — बहुत लंबा टेक्स्ट कॉपी-पेस्ट न करें।</li>
+    <li>अगर PDF फ्रीज़ हो जाए या खाली दिखे, तो डेटा कम करें या ATS मोड चुनें।</li>
+    <li>नाम, ईमेल, फोन और स्किल्स सही और साफ़ लिखें।</li>
+    <li>ATS से अप्लाई करें, फिर Premium Resume को रेफ़रल या इंटरव्यू में शेयर करें — डबल फायदा मिलेगा।</li>
+  </ul>
+
+  <p style="margin-top:16px; font-size:14px; color:#94a3b8;">
+    ✨ <strong>टिप:</strong> ResumeGuru Ultra आपको सिर्फ एक PDF नहीं देता — ये आपकी पहचान को एक ब्रांड बना देता है।  
+    Premium Resume से आप सिर्फ अप्लाई नहीं करते, आप याद रह जाते हैं।
+  </p>
+</div>
+
+
   </script>
-  </body>
-  </html>
+  
+  <div style="max-width:960px; margin:30px auto; padding:18px; background:#18235a; border-radius:14px; box-shadow:0 8px 24px rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.12); color:#eaf0ff; text-align:center;">
+    <h3 style="margin:0 0 8px; font-size:18px; color:#00e5ff;">🎁 Refer & Earn ₹10 per resume</h3>
+    <p style="margin:0 0 12px; font-size:14px;"> सिर्फ resume Refer करो और ₹10 कमाओ।</p>
+    <button onclick="shareReferral()" style="padding:10px 16px; font-weight:700; border-radius:8px; background:linear-gradient(135deg,#00e5ff,#2dd4bf); color:#0b1025; border:0; cursor:pointer;">Share Your Link</button>
+  </div>
+  <div class="footer">
+    © 2025 ResumeGuru Ultra • Powered by ResumeGuru 🚀
+  </div>
+</div>
+
+</body>
+</html>
