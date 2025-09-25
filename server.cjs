@@ -267,16 +267,18 @@ app.post("/create-order", async (req, res) => {
     );
 
     res.json({ payment_session_id: response.data.payment_session_id });
-  } catch (err) {
-    console.error("Cashfree error:", err.response?.data || err.message);
-    res.status(500).json({ error: "Order creation failed" });
-  }
+} catch (err) {
+  console.error("Cashfree error:", err.response?.data || err.message);
+  res.status(500).json({ error: err.response?.data || "Order creation failed" });
+}
+
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`? Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
 
