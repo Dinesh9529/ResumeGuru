@@ -241,6 +241,8 @@ if (!process.env.OPENROUTER_API_KEY) {
 // 👇 इस route को app.listen से ऊपर डालो
 app.post("/create-order", async (req, res) => {
   const { amount } = req.body;
+  console.log("APP_ID:", process.env.CASHFREE_APP_ID);
+  console.log("SECRET_KEY:", process.env.CASHFREE_SECRET_KEY ? "Loaded" : "Missing");
 
   try {
     const response = await axios.post(
@@ -278,6 +280,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`? Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
 
