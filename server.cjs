@@ -239,14 +239,18 @@ if (!process.env.OPENROUTER_API_KEY) {
 }
 
 // 👇 इस route को app.listen से ऊपर डालो
+// 👇 इस पूरे कोड ब्लॉक से अपने पुराने /create-order वाले को बदलें
 app.post("/create-order", async (req, res) => {
   const { amount } = req.body;
-  console.log("APP_ID:", process.env.CASHFREE_APP_ID);
-  console.log("SECRET_KEY:", process.env.CASHFREE_SECRET_KEY ? "Loaded" : "Missing");
+
+  // Debugging logs to confirm variables are loaded
+  console.log("Using App ID:", process.env.CASHFREE_APP_ID ? "Loaded" : "Missing");
+  console.log("Using Secret Key:", process.env.CASHFREE_SECRET_KEY ? "Loaded" : "Missing");
 
   try {
     const response = await axios.post(
-      "https://api.cashfree.com/pg/orders",   // Production URL
+      // ❗️ MISTAKE FIXED: Use the SANDBOX URL for testing
+      "https://sandbox.cashfree.com/pg/orders",
       {
         order_amount: amount,
         order_currency: "INR",
@@ -255,31 +259,35 @@ app.post("/create-order", async (req, res) => {
           customer_id: "cust_" + Date.now(),
           customer_email: "test@example.com",
           customer_phone: "9999999999"
+        },
+        order_meta: {
+          // It's good practice to set a return URL
+          return_url: "https://YOUR_WEBSITE_URL/order_status?order_id={order_id}"
         }
       },
       {
-        // 👇 यही आपका headers block है
         headers: {
+          // Key names must match what you set in Render
           "x-client-id": process.env.CASHFREE_APP_ID,
           "x-client-secret": process.env.CASHFREE_SECRET_KEY,
-          "x-api-version": "2022-09-01",
+          "x-api-version": "2022-09-01", // Or the latest version you prefer
           "Content-Type": "application/json"
         }
       }
     );
 
     res.json({ payment_session_id: response.data.payment_session_id });
-} catch (err) {
-  console.error("Cashfree error:", err.response?.data || err.message);
-  res.status(500).json({ error: err.response?.data || "Order creation failed" });
-}
-
+  } catch (err) {
+    // Improved error logging
+    console.error("Cashfree API Error:", err.response?.data || err.message);
+    res.status(500).json({ error: err.response?.data || "Failed to create order." });
+  }
 });
-
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`? Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
 
