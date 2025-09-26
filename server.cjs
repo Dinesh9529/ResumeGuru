@@ -267,12 +267,11 @@ app.post("/create-order", async (req, res) => {
       },
       {
         headers: {
-          // Key names must match what you set in Render
-          "x-client-id": process.env.CASHFREE_APP_ID,
-          "x-client-secret": process.env.CASHFREE_SECRET_KEY,
-          "x-api-version": "2022-09-01", // Or the latest version you prefer
-          "Content-Type": "application/json"
-        }
+        "x-client-id": process.env.CASHFREE_APP_ID?.trim(),
+        "x-client-secret": process.env.CASHFREE_SECRET_KEY?.trim(),
+        "x-api-version": "2022-09-01",
+        "Content-Type": "application/json"
+    }
       }
     );
 
@@ -287,6 +286,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`? Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
 
