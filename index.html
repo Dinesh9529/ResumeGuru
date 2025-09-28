@@ -1148,8 +1148,7 @@ try{
     currentBlob = await new Promise((res,rej)=> pdfMake.createPdf(dd).getBlob(b=>b?res(b):rej(new Error("PDF failed"))) );
 
     $("btnDownload").disabled=false;
-    $("btnShareWA").disabled=false;
-    st("Ready ✅ — Download and share");
+        st("Ready ✅ — Download and share");
   }catch(e){
     console.error(e);
     alert(e.message||"Error");
@@ -2008,6 +2007,7 @@ Sincerely,
 
 </body>
 </html>
+
 
 
 
