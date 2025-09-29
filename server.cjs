@@ -6,16 +6,18 @@ const axios   = require("axios");
 const cors    = require("cors");
 const fetch   = require("node-fetch"); // ensure installed
 
+// 👇 Pehle app initialize karo
+const app = express();
+
+// 👇 Ab CORS config lagao
 const corsOptions = {
-  origin: "*",   // 👈 sab origins allow (testing ke liye)
+  origin: "*",   // testing ke liye sab origins allow
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 };
-
 app.use(cors(corsOptions));
 
-const app = express();
-app.use(cors());
+// 👇 JSON body parser
 app.use(express.json({ limit: "5mb" }));
 
 // --- PHONEPE ENV VARS ---
@@ -221,5 +223,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
