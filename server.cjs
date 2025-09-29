@@ -175,23 +175,26 @@ app.post("/api/create-order", async (req, res) => {
     const payloadString = JSON.stringify(payload);
     const base64Payload = Buffer.from(payloadString).toString("base64");
 
-    const endpoint = "/pg/v1/pay";
-    const xVerify = crypto
-      .createHash("sha256")
-      .update(base64Payload + endpoint + SALT_KEY)
-      .digest("hex") + "###" + 1;
+   const endpoint = "/pg/v1/pay";
+const url = `${BASE_URL}${endpoint}`; 
+// BASE_URL = "https://api.phonepe.com/apis/hermes"
 
-    const response = await axios.post(
-      `${BASE_URL}${endpoint}`,
-      { request: base64Payload },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-VERIFY": xVerify,
-          "X-MERCHANT-ID": MERCHANT_ID
-        }
-      }
-    );
+const xVerify = crypto
+  .createHash("sha256")
+  .update(base64Payload + endpoint + SALT_KEY)
+  .digest("hex") + "###" + 1;
+
+const response = await axios.post(
+  url,
+  { request: base64Payload },
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "X-VERIFY": xVerify,
+      "X-MERCHANT-ID": MERCHANT_ID
+    }
+  }
+);
 
     res.json(response.data);
   } catch (err) {
@@ -223,6 +226,7 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`🚀 Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
 
