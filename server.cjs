@@ -2,24 +2,18 @@ require("dotenv").config();
 const express = require("express");
 const crypto  = require("crypto");
 const axios   = require("axios");
+const cors    = require("cors");
 
 const app = express();
-app.use(express.json());
+
+// Middlewares
+app.use(cors());
+app.use(express.json({ limit: "5mb" })); // larger payloads ke liye
 
 // Load PhonePe env vars
 const MERCHANT_ID = process.env.PHONEPE_MERCHANT_ID;
 const SALT_KEY    = process.env.PHONEPE_SALT_KEY;
 const BASE_URL    = process.env.PHONEPE_BASE_URL;
-const express = require("express");
-const axios = require("axios");
-const cors = require("cors");
-
-const app = express();
-app.use(express.json());
-app.use(cors());
-// Increased limit to handle larger resumes if needed
-app.use(express.json({ limit: "5mb" }));
-
 // --- CONFIGURATION ---
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 // Using a capable model. You can experiment with others.
@@ -359,6 +353,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`? Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
 
