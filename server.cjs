@@ -1,5 +1,16 @@
 require("dotenv").config();
 const express = require("express");
+const crypto  = require("crypto");
+const axios   = require("axios");
+
+const app = express();
+app.use(express.json());
+
+// Load PhonePe env vars
+const MERCHANT_ID = process.env.PHONEPE_MERCHANT_ID;
+const SALT_KEY    = process.env.PHONEPE_SALT_KEY;
+const BASE_URL    = process.env.PHONEPE_BASE_URL;
+const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
 
@@ -282,10 +293,73 @@ app.post("/create-order", async (req, res) => {
     res.status(500).json({ error: err.response?.data || "Failed to create order." });
   }
 });
+
+app.post("/api/create-order", async (req, res) => {
+  try {
+    const { amount, orderId } = req.body;
+
+    const payload = {
+      merchantId: MERCHANT_ID,
+      merchantTransactionId: orderId,
+      amount: amount * 100, // paise में
+      redirectUrl: "https://resumeguru.onrender.com/payment-status",
+      redirectMode: "POST",
+      callbackUrl: "https://resumeguru.onrender.com/webhook/phonepe",
+      paymentInstrument: { type: "PAY_PAGE" }
+    };
+
+    const payloadString = JSON.stringify(payload);
+    const base64Payload = Buffer.from(payloadString).toString("base64");
+
+    const endpoint = "/pg/v1/pay";
+    const xVerify = crypto
+      .createHash("sha256")
+      .update(base64Payload + endpoint + SALT_KEY)
+      .digest("hex") + "###" + 1;
+
+    const response = await axios.post(
+      `${BASE_URL}${endpoint}`,
+      { request: base64Payload },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-VERIFY": xVerify,
+          "X-MERCHANT-ID": MERCHANT_ID
+        }
+      }
+    );
+
+    res.json(response.data);
+  } catch (err) {
+    console.error("PhonePe order error:", err.response?.data || err.message);
+    res.status(500).json({ error: "Order create failed" });
+  }
+});
+
+app.post("/webhook/phonepe", (req, res) => {
+  try {
+    console.log("Webhook received:", req.body);
+
+    // अगर status SUCCESS है तो unlock logic चलाओ
+    if (req.body?.code === "PAYMENT_SUCCESS" || req.body?.success) {
+      console.log("✅ Payment Success → Unlock ResumeGuru Ultra");
+      // TODO: यहाँ अपना unlock code डालो
+    } else {
+      console.log("❌ Payment Failed/Cancelled");
+    }
+
+    res.status(200).send("OK");
+  } catch (err) {
+    console.error("Webhook error:", err.message);
+    res.status(500).send("FAIL");
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`? Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
 
