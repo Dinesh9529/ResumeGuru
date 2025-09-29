@@ -149,9 +149,12 @@ app.post("/api/create-order", async (req, res) => {
   try {
     const { amount, orderId } = req.body;
 
+    // 👇 Agar frontend se orderId na aaye to backend khud generate kare
+    const txnId = orderId || "RGU_" + Date.now();
+
     const payload = {
       merchantId: MERCHANT_ID,
-      merchantTransactionId: orderId,
+      merchantTransactionId: txnId,   // 👈 hamesha unique hona chahiye
       amount: amount * 100,
       redirectUrl: "https://resumeguru.onrender.com/payment-status",
       redirectMode: "POST",
@@ -186,7 +189,6 @@ app.post("/api/create-order", async (req, res) => {
     res.status(500).json({ error: "Order create failed" });
   }
 });
-
 // PhonePe Webhook
 app.post("/webhook/phonepe", (req, res) => {
   try {
@@ -211,3 +213,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Ultra Resume Guru API is running on port ${PORT}`);
 });
+
