@@ -21,6 +21,7 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "5mb" }));
 
 // --- PHONEPE ENV VARS ---
+const SALT_INDEX = process.env.PHONEPE_SALT_INDEX || 1;
 const MERCHANT_ID = process.env.PHONEPE_MERCHANT_ID;
 const SALT_KEY    = process.env.PHONEPE_SALT_KEY;
 const BASE_URL    = process.env.PHONEPE_BASE_URL;
@@ -176,13 +177,17 @@ app.post("/api/create-order", async (req, res) => {
     const base64Payload = Buffer.from(payloadString).toString("base64");
 
    const endpoint = "/pg/v1/pay";
-const url = `${BASE_URL}${endpoint}`; 
+   const url = `${BASE_URL}${endpoint}`; 
+   console.log("➡️ URL:", url);
+   console.log("➡️ TXN ID:", txnId);
+   console.log("➡️ Amount:", payload.amount);
+   console.log("➡️ X-VERIFY:", xVerify);
 // BASE_URL = "https://api.phonepe.com/apis/hermes"
 
 const xVerify = crypto
   .createHash("sha256")
   .update(base64Payload + endpoint + SALT_KEY)
-  .digest("hex") + "###" + 1;
+  .digest("hex") + "###1";
 
 const response = await axios.post(
   url,
@@ -226,6 +231,7 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`🚀 Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
 
