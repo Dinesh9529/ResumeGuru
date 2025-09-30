@@ -166,7 +166,7 @@ app.post("/api/create-order", async (req, res) => {
     const payload = {
       merchantId: MERCHANT_ID,
       merchantTransactionId: txnId,   // 👈 hamesha unique hona chahiye
-      amount: amount * 100,
+      amount: amount * 100,           // paise mein
       redirectUrl: "https://resumeguru.onrender.com/payment-status",
       redirectMode: "POST",
       callbackUrl: "https://resumeguru.onrender.com/webhook/phonepe",
@@ -176,30 +176,33 @@ app.post("/api/create-order", async (req, res) => {
     const payloadString = JSON.stringify(payload);
     const base64Payload = Buffer.from(payloadString).toString("base64");
 
-   const endpoint = "/pg/v1/pay";
-   const url = `${BASE_URL}${endpoint}`; 
-   console.log("➡️ URL:", url);
-   console.log("➡️ TXN ID:", txnId);
-   console.log("➡️ Amount:", payload.amount);
-   console.log("➡️ X-VERIFY:", xVerify);
-// BASE_URL = "https://api.phonepe.com/apis/hermes"
+    const endpoint = "/pg/v1/pay";
+    const url = `${BASE_URL}${endpoint}`; 
 
-const xVerify = crypto
-  .createHash("sha256")
-  .update(base64Payload + endpoint + SALT_KEY)
-  .digest("hex") + "###1";
+    // 👇 Pehle xVerify banao
+    const xVerify = crypto
+      .createHash("sha256")
+      .update(base64Payload + endpoint + SALT_KEY)
+      .digest("hex") + "###1";
 
-const response = await axios.post(
-  url,
-  { request: base64Payload },
-  {
-    headers: {
-      "Content-Type": "application/json",
-      "X-VERIFY": xVerify,
-      "X-MERCHANT-ID": MERCHANT_ID
-    }
-  }
-);
+    // 👇 Ab safely log karo
+    console.log("➡️ URL:", url);
+    console.log("➡️ TXN ID:", txnId);
+    console.log("➡️ Amount:", payload.amount);
+    console.log("➡️ X-VERIFY:", xVerify);
+
+    // 👇 Ab PhonePe ko call karo
+    const response = await axios.post(
+      url,
+      { request: base64Payload },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-VERIFY": xVerify,
+          "X-MERCHANT-ID": MERCHANT_ID
+        }
+      }
+    );
 
     res.json(response.data);
   } catch (err) {
@@ -231,6 +234,7 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`🚀 Ultra Resume Guru API is running on port ${PORT}`);
 });
+
 
 
 
